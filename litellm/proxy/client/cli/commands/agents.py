@@ -546,8 +546,12 @@ def run_agent(
     launcher(binary, [command[0], *extra_args, *command[1:]], env)
 
 
-def _is_interactive() -> bool:
+def is_interactive() -> bool:
     return sys.stdin.isatty()
+
+
+def _is_interactive() -> bool:
+    return is_interactive()
 
 
 def resolve_api_key(ctx: click.Context) -> str:
@@ -574,15 +578,17 @@ def resolve_api_key(ctx: click.Context) -> str:
 _SKIP_VERIFY_HELP: Final = "Skip the pre-launch key check against the proxy."
 
 
-def _launch(ctx: click.Context, binary: str, args: Sequence[str], *, skip_verify: bool) -> None:
-    ctx_obj: Final[CliContextObj] = ctx.obj
-    base_url: Final = ctx_obj["base_url"]
-    started_interactive: Final = _is_interactive()
-    api_key: Final = resolve_api_key(ctx)
-
+def launch_agent(
+    base_url: str,
+    api_key: str,
+    binary: str,
+    args: Sequence[str] = (),
+    *,
+    skip_verify: bool = False,
+    started_interactive: bool,
+) -> None:
     display_name, _profiles = agent_profile(binary)
     click.echo(f"litellm: routing {display_name} through proxy at {base_url.rstrip('/')}")
-
     try:
         run_agent(
             base_url,
@@ -593,6 +599,18 @@ def _launch(ctx: click.Context, binary: str, args: Sequence[str], *, skip_verify
         )
     except AgentRunError as e:
         raise click.ClickException(str(e))
+
+
+def _launch(ctx: click.Context, binary: str, args: Sequence[str], *, skip_verify: bool) -> None:
+    ctx_obj: Final[CliContextObj] = ctx.obj
+    launch_agent(
+        ctx_obj["base_url"],
+        resolve_api_key(ctx),
+        binary,
+        args,
+        skip_verify=skip_verify,
+        started_interactive=_is_interactive(),
+    )
 
 
 def _make_agent_command(binary: str, display_name: str) -> click.Command:
@@ -631,6 +649,8 @@ __all__ = [
     "agent_model_sync_env",
     "agent_profile",
     "build_agent_env",
+    "is_interactive",
+    "launch_agent",
     "opencode_model_sync_env",
     "opencode_provider_config",
     "prepare_pi",
