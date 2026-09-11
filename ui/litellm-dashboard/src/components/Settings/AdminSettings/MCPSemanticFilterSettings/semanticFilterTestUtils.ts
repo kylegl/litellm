@@ -71,7 +71,7 @@ export const runSemanticFilterTest = async ({
 export const getCurlCommand = (testModel: string, testQuery: string) =>
   `curl --location 'http://localhost:4000/v1/responses' \\
 --header 'Content-Type: application/json' \\
---header 'Authorization: Bearer sk-1234' \\
+--header 'Authorization: Bearer sk-litellm-test-master-key' \\
 --data '{
     "model": "${testModel}",
     "input": [

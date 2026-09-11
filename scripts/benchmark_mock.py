@@ -17,7 +17,7 @@ REQUEST_BODY = {
 }
 
 HEADERS = {
-    "Authorization": "Bearer sk-1234",
+    "Authorization": "Bearer sk-your-litellm-key",
     "Content-Type": "application/json",
 }
 

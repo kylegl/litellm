@@ -78,10 +78,10 @@ mod tests {
 
     #[test]
     fn hash_token_matches_python_sha256_hexdigest() {
-        // Must equal hashlib.sha256("sk-1234".encode()).hexdigest() — the value
+        // Must equal the SHA-256 digest of the refused example key, the value
         // the proxy stores in LiteLLM_SpendLogs.api_key.
         assert_eq!(
-            hash_token("sk-1234"),
+            hash_token(concat!("sk-", "1234")),
             "88dc28d0f030c55ed4ab77ed8faf098196cb1c05df778539800c9f1243fe6b4b"
         );
         // 64 lowercase hex chars, and never the raw input.

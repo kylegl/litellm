@@ -151,7 +151,7 @@ describe("MCPSemanticFilterTestPanel", () => {
 
   it("should show the curl command in the API Usage tab", async () => {
     const user = userEvent.setup();
-    const curlCommand = "curl --location 'http://localhost:4000/v1/responses' --header 'Authorization: Bearer sk-1234'";
+    const curlCommand = "curl --location 'http://localhost:4000/v1/responses' --header 'Authorization: Bearer sk-litellm-test-master-key'";
     render(<MCPSemanticFilterTestPanel {...buildProps({ curlCommand })} />);
 
     await user.click(screen.getByRole("tab", { name: "API Usage" }));

@@ -24,7 +24,7 @@ if (-not $env:LITELLM_BASE_URL) {
 }
 
 if (-not $env:LITELLM_API_KEY) {
-    $env:LITELLM_API_KEY = "sk-1234"
+    $env:LITELLM_API_KEY = "$env:LITELLM_MASTER_KEY"
     Write-Warning "LITELLM_API_KEY not set, using default: $env:LITELLM_API_KEY"
 }
 

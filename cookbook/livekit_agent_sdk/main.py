@@ -13,7 +13,7 @@ import websockets
 
 # Configuration
 PROXY_URL = os.getenv("LITELLM_PROXY_URL", "http://localhost:4000")
-API_KEY = os.getenv("LITELLM_API_KEY", "sk-1234")
+API_KEY = os.environ.get("LITELLM_MASTER_KEY", "sk-your-litellm-key")
 MODEL = os.getenv("LITELLM_MODEL", "grok-voice-agent")
 
 

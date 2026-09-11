@@ -27,7 +27,7 @@ if [ -z "$LITELLM_BASE_URL" ]; then
 fi
 
 if [ -z "$LITELLM_API_KEY" ]; then
-    export LITELLM_API_KEY="sk-1234"
+    export LITELLM_API_KEY="$LITELLM_MASTER_KEY"
     echo "Warning: LITELLM_API_KEY not set, using default: $LITELLM_API_KEY" >&2
 fi
 
