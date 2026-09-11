@@ -5,6 +5,8 @@ Source: litellm/llms/chatgpt/responses/transformation.py
 """
 
 import json
+from pathlib import Path
+from typing import Final
 from unittest.mock import MagicMock, patch
 
 import httpx
@@ -12,8 +14,11 @@ import pytest
 
 import litellm
 from litellm.llms.chatgpt.responses.transformation import ChatGPTResponsesAPIConfig
+from litellm.llms.custom_httpx.http_handler import AsyncHTTPHandler, HTTPHandler
 from litellm.llms.openai.common_utils import OpenAIError
 from litellm.main import responses_api_bridge_check
+from litellm.responses.streaming_iterator import BaseResponsesAPIStreamingIterator
+from litellm.types.llms.openai import ResponsesAPIResponse
 from litellm.types.router import GenericLiteLLMParams
 from litellm.types.utils import LlmProviders
 from litellm.utils import ProviderConfigManager
@@ -102,14 +107,10 @@ class TestChatGPTResponsesAPITransformation:
         url = config.get_complete_url(api_base=None, litellm_params={})
         assert url == "https://chatgpt.example.com/responses"
 
-        custom_url = config.get_complete_url(
-            api_base="https://custom.chatgpt.com", litellm_params={}
-        )
+        custom_url = config.get_complete_url(api_base="https://custom.chatgpt.com", litellm_params={})
         assert custom_url == "https://custom.chatgpt.com/responses"
 
-        url_with_slash = config.get_complete_url(
-            api_base="https://chatgpt.example.com/", litellm_params={}
-        )
+        url_with_slash = config.get_complete_url(api_base="https://chatgpt.example.com/", litellm_params={})
         assert url_with_slash == "https://chatgpt.example.com/responses"
 
     @patch("litellm.llms.chatgpt.responses.transformation.Authenticator")
@@ -162,7 +163,8 @@ class TestChatGPTResponsesAPITransformation:
             "chatgpt/gpt-5.3-codex-spark",
         ],
     )
-    def test_chatgpt_drops_unsupported_responses_params(self, model_name):
+    @pytest.mark.parametrize("truncation", ["auto", "disabled"])
+    def test_chatgpt_drops_unsupported_responses_params(self, model_name, truncation):
         config = ChatGPTResponsesAPIConfig()
         request = config.transform_responses_api_request(
             model=model_name,
@@ -172,14 +174,12 @@ class TestChatGPTResponsesAPITransformation:
                 "user": "user_123",
                 "temperature": 0.2,
                 "top_p": 0.9,
-                "context_management": [
-                    {"type": "compaction", "compact_threshold": 200000}
-                ],
+                "context_management": [{"type": "compaction", "compact_threshold": 200000}],
                 "metadata": {"foo": "bar"},
                 "max_output_tokens": 123,
                 "stream_options": {"include_usage": True},
+                "truncation": truncation,
                 # supported and should be preserved
-                "truncation": "auto",
                 "previous_response_id": "resp_123",
                 "reasoning": {"effort": "medium"},
                 "tools": [{"type": "function", "function": {"name": "hello"}}],
@@ -196,8 +196,8 @@ class TestChatGPTResponsesAPITransformation:
         assert "metadata" not in request
         assert "max_output_tokens" not in request
         assert "stream_options" not in request
+        assert "truncation" not in request
 
-        assert request["truncation"] == "auto"
         assert request["previous_response_id"] == "resp_123"
         assert request["reasoning"] == {"effort": "medium"}
         assert request["tools"] == [{"type": "function", "function": {"name": "hello"}}]
@@ -262,9 +262,7 @@ class TestChatGPTResponsesAPITransformation:
             ("chatgpt/gpt-5.3-codex", "gpt-5.3-codex"),
         ],
     )
-    def test_chatgpt_non_stream_sse_response_parsing(
-        self, model_name: str, response_model: str
-    ):
+    def test_chatgpt_non_stream_sse_response_parsing(self, model_name: str, response_model: str):
         config = ChatGPTResponsesAPIConfig()
         response_payload = {
             "id": "resp_test",
@@ -287,9 +285,7 @@ class TestChatGPTResponsesAPITransformation:
                 "",
             ]
         )
-        raw_response = httpx.Response(
-            200, headers={"content-type": "text/event-stream"}, text=sse_body
-        )
+        raw_response = httpx.Response(200, headers={"content-type": "text/event-stream"}, text=sse_body)
         logging_obj = MagicMock()
 
         parsed = config.transform_response_api_response(
@@ -307,15 +303,16 @@ class TestChatGPTResponsesAPITransformation:
             ("chatgpt/gpt-5.3-codex", "gpt-5.3-codex"),
         ],
     )
+    @pytest.mark.parametrize("status", ["completed", "incomplete"])
     def test_chatgpt_non_stream_sse_response_recovers_output_items(
-        self, model_name: str, response_model: str
+        self, model_name: str, response_model: str, status: str
     ):
         config = ChatGPTResponsesAPIConfig()
         response_payload = {
             "id": "resp_test",
             "object": "response",
             "created_at": 1700000000,
-            "status": "completed",
+            "status": status,
             "model": response_model,
             "output": [],
         }
@@ -327,14 +324,12 @@ class TestChatGPTResponsesAPITransformation:
         sse_body = "\n".join(
             [
                 f"data: {json.dumps({'type': 'response.output_item.done', 'output_index': 0, 'item': streamed_output_item})}",
-                f"data: {json.dumps({'type': 'response.completed', 'response': response_payload})}",
+                f"data: {json.dumps({'type': 'response.' + status, 'response': response_payload})}",
                 "data: [DONE]",
                 "",
             ]
         )
-        raw_response = httpx.Response(
-            200, headers={"content-type": "text/event-stream"}, text=sse_body
-        )
+        raw_response = httpx.Response(200, headers={"content-type": "text/event-stream"}, text=sse_body)
         logging_obj = MagicMock()
 
         parsed = config.transform_response_api_response(
@@ -344,6 +339,7 @@ class TestChatGPTResponsesAPITransformation:
         )
 
         assert parsed.output_text == "Hello from stream!"
+        assert parsed.status == status
 
     def test_chatgpt_non_stream_sse_recovers_whitespace_padded_chunks(self):
         """Chunks with leading whitespace before `data:` must still parse.
@@ -374,9 +370,7 @@ class TestChatGPTResponsesAPITransformation:
                 "",
             ]
         )
-        raw_response = httpx.Response(
-            200, headers={"content-type": "text/event-stream"}, text=sse_body
-        )
+        raw_response = httpx.Response(200, headers={"content-type": "text/event-stream"}, text=sse_body)
         logging_obj = MagicMock()
 
         parsed = config.transform_response_api_response(
@@ -409,9 +403,7 @@ class TestChatGPTResponsesAPITransformation:
                 "",
             ]
         )
-        raw_response = httpx.Response(
-            502, headers={"content-type": "text/event-stream"}, text=sse_body
-        )
+        raw_response = httpx.Response(502, headers={"content-type": "text/event-stream"}, text=sse_body)
         logging_obj = MagicMock()
 
         with pytest.raises(OpenAIError) as exc_info:
@@ -423,3 +415,113 @@ class TestChatGPTResponsesAPITransformation:
 
         assert "ChatGPT upstream failed" in str(exc_info.value)
         assert exc_info.value.status_code == 502
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("use_async", [False, True])
+@pytest.mark.parametrize("stream", [None, False, True])
+async def test_chatgpt_responses_preserves_caller_stream_preference(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, use_async: bool, stream: bool | None
+) -> None:
+    monkeypatch.setenv("CHATGPT_TOKEN_DIR", str(tmp_path))
+    (tmp_path / "auth.json").write_text(
+        json.dumps(
+            {
+                "access_token": "test-token",
+                "account_id": "test-account",
+                "expires_at": 4102444800,
+            }
+        )
+    )
+    schema: Final = {
+        "format": {
+            "type": "json_schema",
+            "name": "reminder",
+            "strict": True,
+            "schema": {
+                "type": "object",
+                "properties": {"reminder": {"type": "boolean"}},
+                "required": ["reminder"],
+                "additionalProperties": False,
+            },
+        }
+    }
+    item: Final = {
+        "id": "msg_test",
+        "type": "message",
+        "role": "assistant",
+        "status": "completed",
+        "content": [{"type": "output_text", "text": '{"reminder":true}', "annotations": []}],
+    }
+    events: Final = (
+        {"type": "response.output_item.done", "sequence_number": 0, "output_index": 0, "item": item},
+        {
+            "type": "response.completed",
+            "sequence_number": 1,
+            "response": {
+                "id": "resp_test",
+                "object": "response",
+                "created_at": 1700000000,
+                "status": "completed",
+                "model": "gpt-5.6-sol",
+                "output": [],
+                "usage": {"input_tokens": 17, "output_tokens": 5, "total_tokens": 22},
+            },
+        },
+    )
+
+    def respond(request: httpx.Request) -> httpx.Response:
+        body: Final = json.loads(request.content)
+        assert body["stream"] is True
+        assert body["store"] is False
+        assert body["text"] == schema
+        assert body["input"] == [{"role": "user", "content": "A fictional library reminder"}]
+        assert "max_output_tokens" not in body
+        assert request.headers["authorization"] == "Bearer test-token"
+        return httpx.Response(
+            200,
+            headers={"content-type": "text/event-stream"},
+            content="".join(f"data: {json.dumps(event)}\n\n" for event in events),
+        )
+
+    transport: Final = httpx.MockTransport(respond)
+    with httpx.Client(transport=transport) as sync_client:
+        async with httpx.AsyncClient(transport=transport) as async_client:
+            async_handler: Final = AsyncHTTPHandler()
+            await async_handler.close()
+            async_handler.client = async_client
+            response: Final = (
+                await litellm.aresponses(
+                    model="chatgpt/gpt-5.6-sol",
+                    input="A fictional library reminder",
+                    text=schema,
+                    max_output_tokens=2500,
+                    stream=stream,
+                    client=async_handler,
+                )
+                if use_async
+                else litellm.responses(
+                    model="chatgpt/gpt-5.6-sol",
+                    input="A fictional library reminder",
+                    text=schema,
+                    max_output_tokens=2500,
+                    stream=stream,
+                    client=HTTPHandler(client=sync_client),
+                )
+            )
+            if stream:
+                assert isinstance(response, BaseResponsesAPIStreamingIterator)
+                chunks: Final = (
+                    [chunk.model_dump() async for chunk in response]
+                    if use_async
+                    else [chunk.model_dump() for chunk in response]
+                )
+                assert any(chunk.get("item") == item for chunk in chunks)
+                assert chunks[-1]["type"] == "response.completed"
+            else:
+                assert isinstance(response, ResponsesAPIResponse)
+                assert json.loads(response.output_text) == {"reminder": True}
+                assert response.status == "completed"
+                assert response.usage is not None
+                assert response.usage.input_tokens == 17
+                assert response.usage.output_tokens == 5

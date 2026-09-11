@@ -82,7 +82,7 @@ class ChatGPTResponsesAPIConfig(OpenAIResponsesAPIConfig):
     ) -> dict:
         request: Final = super().transform_responses_api_request(
             model,
-            input,
+            [{"role": "user", "content": input}] if isinstance(input, str) else input,
             response_api_optional_request_params,
             litellm_params,
             headers,
@@ -112,7 +112,6 @@ class ChatGPTResponsesAPIConfig(OpenAIResponsesAPIConfig):
             "tool_choice",
             "reasoning",
             "previous_response_id",
-            "truncation",
             *(("text",) if _has_structured_output_format(request.get("text")) else ()),
         }
 
@@ -185,7 +184,10 @@ class ChatGPTResponsesAPIConfig(OpenAIResponsesAPIConfig):
                 )
                 continue
 
-            if event_type == ResponsesAPIStreamEvents.RESPONSE_COMPLETED:
+            if event_type in (
+                ResponsesAPIStreamEvents.RESPONSE_COMPLETED,
+                ResponsesAPIStreamEvents.RESPONSE_INCOMPLETE,
+            ):
                 # Real OUTPUT_ITEM_DONE events take precedence at any given
                 # output_index, but text-only items at indices without a
                 # matching OUTPUT_ITEM_DONE must still be preserved (e.g.
