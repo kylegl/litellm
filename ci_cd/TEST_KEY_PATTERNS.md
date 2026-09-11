@@ -5,7 +5,7 @@ Standard patterns for test/mock keys and credentials in the LiteLLM codebase to 
 ## How GitGuardian Works
 
 GitGuardian uses **machine learning and entropy analysis**, not just pattern matching:
-- **Low entropy** values (like `sk-your-litellm-key`, `postgres`) are automatically ignored
+- **Low entropy** values (like `sk-litellm-test-master-key`, `postgres`) are automatically ignored
 - **High entropy** values (realistic-looking secrets) trigger detection
 - **Context-aware** detection understands code syntax like `os.environ["KEY"]`
 
@@ -15,7 +15,7 @@ GitGuardian uses **machine learning and entropy analysis**, not just pattern mat
 These won't trigger GitGuardian's ML detector:
 
 ```python
-api_key = "sk-your-litellm-key"
+api_key = "sk-litellm-test-master-key"
 api_key = "sk-12345"
 database_password = "postgres"
 token = "test123"
