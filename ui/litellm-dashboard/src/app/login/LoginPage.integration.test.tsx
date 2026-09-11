@@ -104,7 +104,11 @@ describe("LoginPage submit payload", () => {
     await user.click(screen.getByRole("button", { name: "Login" }));
 
     await waitFor(() => expect(mockMutate).toHaveBeenCalledTimes(1));
-    expect(mockMutate.mock.calls[0][0]).toStrictEqual({ username: "admin", password: "sk-litellm-test-master-key", useV3: false });
+    expect(mockMutate.mock.calls[0][0]).toStrictEqual({
+      username: "admin",
+      password: "sk-litellm-test-master-key",
+      useV3: false,
+    });
     expect(switchToWorkerUrl).not.toHaveBeenCalled();
   });
 
@@ -117,7 +121,11 @@ describe("LoginPage submit payload", () => {
     await user.type(screen.getByLabelText("Password"), "sk-litellm-test-master-key{Enter}");
 
     await waitFor(() => expect(mockMutate).toHaveBeenCalledTimes(1));
-    expect(mockMutate.mock.calls[0][0]).toStrictEqual({ username: "admin", password: "sk-litellm-test-master-key", useV3: false });
+    expect(mockMutate.mock.calls[0][0]).toStrictEqual({
+      username: "admin",
+      password: "sk-litellm-test-master-key",
+      useV3: false,
+    });
   });
 
   it("blocks submit and shows both required messages when the fields are empty", async () => {
@@ -159,7 +167,11 @@ describe("LoginPage submit payload", () => {
     await user.click(screen.getByRole("button", { name: "Login" }));
 
     await waitFor(() => expect(mockMutate).toHaveBeenCalledTimes(1));
-    expect(mockMutate.mock.calls[0][0]).toStrictEqual({ username: "admin", password: "sk-litellm-test-master-key", useV3: true });
+    expect(mockMutate.mock.calls[0][0]).toStrictEqual({
+      username: "admin",
+      password: "sk-litellm-test-master-key",
+      useV3: true,
+    });
     expect(switchToWorkerUrl).toHaveBeenCalledWith("http://worker-b:4000");
   });
 
@@ -186,7 +198,11 @@ describe("LoginPage submit payload", () => {
     await user.click(screen.getByRole("button", { name: "Login" }));
 
     await waitFor(() => expect(mockMutate).toHaveBeenCalledTimes(1));
-    expect(mockMutate.mock.calls[0][0]).toStrictEqual({ username: "admin", password: "sk-litellm-test-master-key", useV3: true });
+    expect(mockMutate.mock.calls[0][0]).toStrictEqual({
+      username: "admin",
+      password: "sk-litellm-test-master-key",
+      useV3: true,
+    });
     expect(switchToWorkerUrl).toHaveBeenCalledWith("http://worker-a:4000");
   });
 });
