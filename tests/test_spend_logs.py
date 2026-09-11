@@ -8,7 +8,7 @@ import aiohttp
 
 async def generate_key(session, models=[], team_id=None):
     url = "http://0.0.0.0:4000/key/generate"
-    headers = {"Authorization": "Bearer sk-1234", "Content-Type": "application/json"}
+    headers = {"Authorization": "Bearer sk-litellm-test-master-key", "Content-Type": "application/json"}
     data = {
         "models": models,
         "duration": None,
@@ -86,7 +86,7 @@ async def get_spend_logs(session, request_id=None, api_key=None):
         url = f"http://0.0.0.0:4000/spend/logs?api_key={api_key}"
     else:
         url = f"http://0.0.0.0:4000/spend/logs?request_id={request_id}"
-    headers = {"Authorization": "Bearer sk-1234", "Content-Type": "application/json"}
+    headers = {"Authorization": "Bearer sk-litellm-test-master-key", "Content-Type": "application/json"}
 
     async with session.get(url, headers=headers) as response:
         status = response.status
@@ -129,7 +129,7 @@ async def generate_org(session: aiohttp.ClientSession) -> dict:
         dict: Response containing org_id
     """
     url = "http://0.0.0.0:4000/organization/new"
-    headers = {"Authorization": "Bearer sk-1234", "Content-Type": "application/json"}
+    headers = {"Authorization": "Bearer sk-litellm-test-master-key", "Content-Type": "application/json"}
 
     request_body = {
         "organization_alias": f"test-org-{uuid.uuid4()}",
@@ -151,7 +151,7 @@ async def generate_team(session: aiohttp.ClientSession, org_id: str) -> dict:
         dict: Response containing team_id
     """
     url = "http://0.0.0.0:4000/team/new"
-    headers = {"Authorization": "Bearer sk-1234", "Content-Type": "application/json"}
+    headers = {"Authorization": "Bearer sk-litellm-test-master-key", "Content-Type": "application/json"}
     data = {"organization_id": org_id}
 
     async with session.post(url, headers=headers, json=data) as response:
@@ -198,7 +198,7 @@ async def test_spend_logs_with_org_id():
 
 async def get_predict_spend_logs(session):
     url = "http://0.0.0.0:4000/global/predict/spend/logs"
-    headers = {"Authorization": "Bearer sk-1234", "Content-Type": "application/json"}
+    headers = {"Authorization": "Bearer sk-litellm-test-master-key", "Content-Type": "application/json"}
     data = {
         "data": [
             {
@@ -223,7 +223,7 @@ async def get_predict_spend_logs(session):
 
 async def get_spend_report(session, start_date, end_date):
     url = "http://0.0.0.0:4000/global/spend/report"
-    headers = {"Authorization": "Bearer sk-1234", "Content-Type": "application/json"}
+    headers = {"Authorization": "Bearer sk-litellm-test-master-key", "Content-Type": "application/json"}
     async with session.get(
         url, headers=headers, params={"start_date": start_date, "end_date": end_date}
     ) as response:

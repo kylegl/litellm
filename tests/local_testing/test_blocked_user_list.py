@@ -96,7 +96,7 @@ async def test_block_user_check(prisma_client):
     - Test to see if a call without that user is passes
     """
     setattr(litellm.proxy.proxy_server, "prisma_client", prisma_client)
-    setattr(litellm.proxy.proxy_server, "master_key", "sk-1234")
+    setattr(litellm.proxy.proxy_server, "master_key", "sk-litellm-test-master-key")
 
     litellm.blocked_user_list = ["user_id_1"]
 
@@ -141,7 +141,7 @@ async def test_block_user_db_check(prisma_client):
     - Check returned value
     """
     setattr(litellm.proxy.proxy_server, "prisma_client", prisma_client)
-    setattr(litellm.proxy.proxy_server, "master_key", "sk-1234")
+    setattr(litellm.proxy.proxy_server, "master_key", "sk-litellm-test-master-key")
     await litellm.proxy.proxy_server.prisma_client.connect()
     _block_users = BlockUsers(user_ids=["user_id_1"])
     result = await block_user(data=_block_users)

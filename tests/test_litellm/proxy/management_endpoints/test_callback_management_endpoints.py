@@ -52,7 +52,7 @@ class TestCallbackManagementEndpoints:
 
         # Make request to list callbacks endpoint
         response = client.get(
-            "/callbacks/list", headers={"Authorization": "Bearer sk-1234"}
+            "/callbacks/list", headers={"Authorization": "Bearer sk-litellm-test-master-key"}
         )
 
         # Verify response
@@ -93,7 +93,7 @@ class TestCallbackManagementEndpoints:
 
             # Make request to list callbacks endpoint
             response = client.get(
-                "/callbacks/list", headers={"Authorization": "Bearer sk-1234"}
+                "/callbacks/list", headers={"Authorization": "Bearer sk-litellm-test-master-key"}
             )
 
             # Verify response
@@ -124,7 +124,7 @@ class TestCallbackManagementEndpoints:
 
         # Make request to list callbacks endpoint
         response = client.get(
-            "/callbacks/list", headers={"Authorization": "Bearer sk-1234"}
+            "/callbacks/list", headers={"Authorization": "Bearer sk-litellm-test-master-key"}
         )
 
         # Verify response
@@ -161,7 +161,7 @@ class TestCallbackManagementEndpoints:
 
         # Make request to list callbacks endpoint
         response = client.get(
-            "/callbacks/list", headers={"Authorization": "Bearer sk-1234"}
+            "/callbacks/list", headers={"Authorization": "Bearer sk-litellm-test-master-key"}
         )
 
         # Verify response
@@ -201,7 +201,7 @@ class TestCallbackManagementEndpoints:
 
         # Make request to list callbacks endpoint
         response = client.get(
-            "/callbacks/list", headers={"Authorization": "Bearer sk-1234"}
+            "/callbacks/list", headers={"Authorization": "Bearer sk-litellm-test-master-key"}
         )
 
         # Verify response structure
@@ -221,7 +221,7 @@ class TestCallbackManagementEndpoints:
 
         # Make request to get callback configs endpoint
         response = client.get(
-            "/callbacks/configs", headers={"Authorization": "Bearer sk-1234"}
+            "/callbacks/configs", headers={"Authorization": "Bearer sk-litellm-test-master-key"}
         )
 
         # Verify response
@@ -269,7 +269,7 @@ class TestCallbackManagementEndpoints:
 class TestNewRelicCallbackConfig:
     def test_newrelic_entry_supports_team_logging_with_dynamic_params(self):
         client = TestClient(app)
-        response = client.get("/callbacks/configs", headers={"Authorization": "Bearer sk-1234"})
+        response = client.get("/callbacks/configs", headers={"Authorization": "Bearer sk-litellm-test-master-key"})
         assert response.status_code == 200
         newrelic = next(
             (config for config in response.json() if config.get("id") == "newrelic"),

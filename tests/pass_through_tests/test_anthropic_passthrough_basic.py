@@ -7,7 +7,7 @@ class TestAnthropicPassthroughBasic(BaseAnthropicMessagesTest):
     def get_client(self):
         return anthropic.Anthropic(
             base_url="http://0.0.0.0:4000/anthropic",
-            api_key="sk-1234",
+            api_key="sk-litellm-test-master-key",
         )
 
 
@@ -15,7 +15,7 @@ class TestAnthropicMessagesEndpoint(BaseAnthropicMessagesTest):
     def get_client(self):
         return anthropic.Anthropic(
             base_url="http://0.0.0.0:4000",
-            api_key="sk-1234",
+            api_key="sk-litellm-test-master-key",
         )
 
     def test_anthropic_messages_to_wildcard_model(self):

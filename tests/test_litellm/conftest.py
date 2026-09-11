@@ -42,7 +42,6 @@ from litellm.llms.custom_httpx.async_client_cleanup import (
 )
 from litellm.proxy.db import tool_registry_writer as tool_registry_writer_module
 
-os.environ.setdefault("LITELLM_ALLOW_INSECURE_MASTER_KEY", "true")
 
 
 def _reset_module_level_aws_auth_caches():

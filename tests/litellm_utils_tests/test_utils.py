@@ -1609,7 +1609,7 @@ def test_get_valid_models_openai_proxy(monkeypatch):
 
     litellm._turn_on_debug()
 
-    monkeypatch.setenv("LITELLM_PROXY_API_KEY", "sk-1234")
+    monkeypatch.setenv("LITELLM_PROXY_API_KEY", "sk-litellm-test-master-key")
     monkeypatch.setenv("LITELLM_PROXY_API_BASE", "https://litellm-api.up.railway.app/")
     monkeypatch.delenv("FIREWORKS_AI_ACCOUNT_ID", None)
     monkeypatch.delenv("FIREWORKS_AI_API_KEY", None)
@@ -1644,7 +1644,7 @@ def test_get_valid_models_fireworks_ai(monkeypatch):
 
     litellm._turn_on_debug()
 
-    monkeypatch.setenv("FIREWORKS_API_KEY", "sk-1234")
+    monkeypatch.setenv("FIREWORKS_API_KEY", "sk-litellm-test-master-key")
     monkeypatch.setenv("FIREWORKS_ACCOUNT_ID", "1234")
     monkeypatch.setattr(litellm, "provider_list", ["fireworks_ai"])
 
@@ -1731,7 +1731,7 @@ def test_get_valid_models_default(monkeypatch):
     from litellm.utils import get_valid_models
     import litellm
 
-    monkeypatch.setenv("FIREWORKS_API_KEY", "sk-1234")
+    monkeypatch.setenv("FIREWORKS_API_KEY", "sk-litellm-test-master-key")
     valid_models = get_valid_models()
     assert len(valid_models) > 0
 

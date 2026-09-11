@@ -2434,7 +2434,7 @@ def test_ProxyConfig__add_deployment_resolves_env_refs_on_arbitrary_field(monkey
     ["true", "os.environ/DROP_PARAMS_FLAG"],
 )
 def test_ProxyConfig__add_deployment_turns_stored_drop_params_string_into_bool(monkeypatch, stored_drop_params):
-    monkeypatch.setenv("LITELLM_SALT_KEY", "sk-1234")
+    monkeypatch.setenv("LITELLM_SALT_KEY", "sk-litellm-test-master-key")
     monkeypatch.setenv("DROP_PARAMS_FLAG", "true")
     fake_router = MagicMock()
     fake_router.upsert_deployment = MagicMock(return_value=True)
@@ -2459,7 +2459,7 @@ def test_ProxyConfig__add_deployment_turns_stored_drop_params_string_into_bool(m
 
 
 def test_ProxyConfig__add_deployment_keeps_loading_rows_after_a_non_flag_drop_params(monkeypatch):
-    monkeypatch.setenv("LITELLM_SALT_KEY", "sk-1234")
+    monkeypatch.setenv("LITELLM_SALT_KEY", "sk-litellm-test-master-key")
     fake_router = MagicMock()
     fake_router.upsert_deployment = MagicMock(return_value=True)
     monkeypatch.setattr("litellm.proxy.proxy_server.llm_router", fake_router)

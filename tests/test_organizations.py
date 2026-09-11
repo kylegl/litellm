@@ -18,7 +18,7 @@ async def new_user(
     user_email=None,
 ):
     url = "http://0.0.0.0:4000/user/new"
-    headers = {"Authorization": "Bearer sk-1234", "Content-Type": "application/json"}
+    headers = {"Authorization": "Bearer sk-litellm-test-master-key", "Content-Type": "application/json"}
     data = {
         "models": models,
         "aliases": {"mistral-7b": "gpt-3.5-turbo"},
@@ -52,7 +52,7 @@ async def new_user(
 
 async def new_organization(session, i, organization_alias, max_budget=None):
     url = "http://0.0.0.0:4000/organization/new"
-    headers = {"Authorization": "Bearer sk-1234", "Content-Type": "application/json"}
+    headers = {"Authorization": "Bearer sk-litellm-test-master-key", "Content-Type": "application/json"}
     data = {
         "organization_alias": organization_alias,
         "models": ["azure-models"],
@@ -77,7 +77,7 @@ async def add_member_to_org(
     session, i, organization_id, user_id, user_role="internal_user"
 ):
     url = "http://0.0.0.0:4000/organization/member_add"
-    headers = {"Authorization": "Bearer sk-1234", "Content-Type": "application/json"}
+    headers = {"Authorization": "Bearer sk-litellm-test-master-key", "Content-Type": "application/json"}
     data = {
         "organization_id": organization_id,
         "member": {
@@ -104,7 +104,7 @@ async def update_member_role(
     session, i, organization_id, user_id, user_role="internal_user"
 ):
     url = "http://0.0.0.0:4000/organization/member_update"
-    headers = {"Authorization": "Bearer sk-1234", "Content-Type": "application/json"}
+    headers = {"Authorization": "Bearer sk-litellm-test-master-key", "Content-Type": "application/json"}
     data = {
         "organization_id": organization_id,
         "user_id": user_id,
@@ -127,7 +127,7 @@ async def update_member_role(
 
 async def delete_member_from_org(session, i, organization_id, user_id):
     url = "http://0.0.0.0:4000/organization/member_delete"
-    headers = {"Authorization": "Bearer sk-1234", "Content-Type": "application/json"}
+    headers = {"Authorization": "Bearer sk-litellm-test-master-key", "Content-Type": "application/json"}
     data = {
         "organization_id": organization_id,
         "user_id": user_id,
@@ -149,7 +149,7 @@ async def delete_member_from_org(session, i, organization_id, user_id):
 
 async def delete_organization(session, i, organization_id):
     url = "http://0.0.0.0:4000/organization/delete"
-    headers = {"Authorization": "Bearer sk-1234", "Content-Type": "application/json"}
+    headers = {"Authorization": "Bearer sk-litellm-test-master-key", "Content-Type": "application/json"}
     data = {"organization_ids": [organization_id]}
 
     async with session.delete(url, headers=headers, json=data) as response:
@@ -168,7 +168,7 @@ async def delete_organization(session, i, organization_id):
 
 async def list_organization(session, i):
     url = "http://0.0.0.0:4000/organization/list"
-    headers = {"Authorization": "Bearer sk-1234", "Content-Type": "application/json"}
+    headers = {"Authorization": "Bearer sk-litellm-test-master-key", "Content-Type": "application/json"}
 
     async with session.get(url, headers=headers) as response:
         status = response.status

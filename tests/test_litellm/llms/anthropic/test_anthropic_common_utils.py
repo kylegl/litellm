@@ -771,7 +771,7 @@ class TestProxyOAuthHeaderForwarding:
     ):
         """Authorization Bearer (LiteLLM key) must never be forwarded to the LLM provider.
 
-        When a user sends their LiteLLM key as 'Authorization: Bearer sk-1234' and
+        When a user sends their LiteLLM key as 'Authorization: Bearer sk-litellm-test-master-key' and
         forward_llm_provider_auth_headers=True, the Authorization header must be stripped
         — not sent to Anthropic as if it were an Anthropic API key.
         """
@@ -781,7 +781,7 @@ class TestProxyOAuthHeaderForwarding:
 
         raw_headers = Headers(
             raw=[
-                (b"authorization", b"Bearer sk-1234-litellm-proxy-key"),
+                (b"authorization", b"Bearer sk-litellm-test-master-key-litellm-proxy-key"),
                 (b"x-api-key", b"sk-ant-api03-real-anthropic-key"),
                 (b"content-type", b"application/json"),
             ]

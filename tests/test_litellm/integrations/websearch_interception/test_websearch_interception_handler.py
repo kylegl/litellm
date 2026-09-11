@@ -254,7 +254,7 @@ async def test_execute_search_attributes_spend_to_the_calling_key(monkeypatch):
     ]
     mock_asearch = AsyncMock(return_value=SearchResponse(object="search", results=[]))
     user_api_key_auth = UserAPIKeyAuth(
-        api_key="hashed-sk-1234",
+        api_key="hashed-sk-litellm-test-master-key",
         key_alias="alice-key",
         user_id="user-alice",
         org_id="org-1",
@@ -269,8 +269,8 @@ async def test_execute_search_attributes_spend_to_the_calling_key(monkeypatch):
     )
 
     forwarded_metadata = mock_asearch.await_args.kwargs["litellm_metadata"]
-    assert forwarded_metadata["user_api_key"] == "hashed-sk-1234"
-    assert forwarded_metadata["user_api_key_hash"] == "hashed-sk-1234"
+    assert forwarded_metadata["user_api_key"] == "hashed-sk-litellm-test-master-key"
+    assert forwarded_metadata["user_api_key_hash"] == "hashed-sk-litellm-test-master-key"
     assert forwarded_metadata["user_api_key_alias"] == "alice-key"
     assert forwarded_metadata["user_api_key_user_id"] == "user-alice"
     assert forwarded_metadata["user_api_key_org_id"] == "org-1"

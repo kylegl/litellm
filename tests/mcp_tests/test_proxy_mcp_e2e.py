@@ -40,7 +40,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 PROXY_START_TIMEOUT = 30
 
 
-PROXY_AUTHORIZATION_HEADER = "Bearer sk-1234"
+PROXY_AUTHORIZATION_HEADER = "Bearer sk-litellm-test-master-key"
 
 
 @pytest.fixture(scope="session", autouse=True)
@@ -51,8 +51,7 @@ def _clear_proxy_database_env() -> typing.Iterator[None]:
     # The FastAPI lifespan event (proxy_startup_event) re-reads master_key from
     # the LITELLM_MASTER_KEY env var, overriding whatever initialize() set from
     # the config file. We must set it here so the lifespan doesn't reset it to None.
-    mp.setenv("LITELLM_MASTER_KEY", "sk-1234")
-    mp.setenv("LITELLM_ALLOW_INSECURE_MASTER_KEY", "true")
+    mp.setenv("LITELLM_MASTER_KEY", "sk-litellm-test-master-key")
     try:
         yield
     finally:
@@ -453,7 +452,7 @@ class TestProxyMcpSchemaDiscoveryMode:
 
 async def authorize_proxy_key(request: Request, api_key: str) -> UserAPIKeyAuth:
     permissions = {
-        "sk-1234": LiteLLM_ObjectPermissionTable(object_permission_id="open", mcp_servers=["math_stdio"]),
+        "sk-litellm-test-master-key": LiteLLM_ObjectPermissionTable(object_permission_id="open", mcp_servers=["math_stdio"]),
         "sk-restricted": LiteLLM_ObjectPermissionTable(
             object_permission_id="restricted", mcp_servers=["math_restricted"]
         ),
@@ -493,7 +492,7 @@ proxy_call_recorder = ProxyCallRecorder()
 
 
 @asynccontextmanager
-async def _scoped_session(url: str, key: str = "sk-1234", **headers: str) -> typing.AsyncIterator[ClientSession]:
+async def _scoped_session(url: str, key: str = "sk-litellm-test-master-key", **headers: str) -> typing.AsyncIterator[ClientSession]:
     async with asyncio.timeout(30):
         async with _proxy_session(url, Authorization=f"Bearer {key}", **headers) as (read, write, _sid):
             async with ClientSession(read, write) as session:

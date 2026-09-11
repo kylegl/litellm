@@ -687,7 +687,7 @@ def get_langfuse_prompt(name: str):
 async def test_make_request():
     response = await litellm.acompletion(
         model="openai/llama3",
-        api_key="sk-1234",
+        api_key="sk-litellm-test-master-key",
         base_url="http://localhost:4000",
         messages=[{"role": "user", "content": "Hi 👋 - i'm claude"}],
         extra_body={

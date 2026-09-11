@@ -20,7 +20,7 @@ import pytest
 
 # ── Configuration ─────────────────────────────────────────────────────────────
 PROXY_BASE_URL = os.environ.get("LITELLM_PROXY_BASE_URL", "ws://0.0.0.0:4000")
-PROXY_MASTER_KEY = os.environ.get("LITELLM_PROXY_KEY", "sk-1234")
+PROXY_MASTER_KEY = os.environ.get("LITELLM_PROXY_KEY", "sk-litellm-test-master-key")
 PROXY_MODEL = os.environ.get("LITELLM_PROXY_RESPONSES_MODEL", "gpt-5-mini")
 # ──────────────────────────────────────────────────────────────────────────────
 

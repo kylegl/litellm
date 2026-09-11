@@ -16,7 +16,7 @@ The suites run against a live proxy, so bring one up first by running the litell
 1. Create a `.env` file in this directory with the provider keys the example models use, plus the master key and the Postgres/Redis coordinates your config reads back:
 
    ```bash
-   LITELLM_MASTER_KEY="sk-1234"
+   LITELLM_MASTER_KEY="sk-litellm-test-master-key"
    DATABASE_URL="postgresql://llmproxy:dbpassword9090@localhost:5432/litellm"
    REDIS_HOST="localhost"
    REDIS_PORT="6379"

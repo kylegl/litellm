@@ -51,7 +51,7 @@ import json
 from litellm.proxy._types import ProxyErrorTypes
 from typing import Optional
 
-LITELLM_MASTER_KEY = "sk-1234"
+LITELLM_MASTER_KEY = "sk-litellm-test-master-key"
 
 
 async def create_team(session, key, member_permissions=None):

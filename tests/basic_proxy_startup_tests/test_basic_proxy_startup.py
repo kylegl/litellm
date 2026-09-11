@@ -36,7 +36,7 @@ async def test_health_and_chat_completion():
         # Make a chat completion call
         url = "http://0.0.0.0:4000/chat/completions"
         headers = {
-            "Authorization": "Bearer sk-1234",
+            "Authorization": "Bearer sk-litellm-test-master-key",
             "Content-Type": "application/json",
         }
         data = {

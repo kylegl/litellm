@@ -275,7 +275,7 @@ async def test_update_persists_into_the_general_settings_config_row(monkeypatch)
     (the row startup merges over the yaml config), and sibling general_settings
     keys survive the write."""
     monkeypatch.setattr(litellm, "store_audit_logs", False)
-    mock_prisma = _prisma_with_general_settings({"master_key": "sk-1234"})
+    mock_prisma = _prisma_with_general_settings({"master_key": "sk-litellm-test-master-key"})
     invalidated: list[str] = []
 
     async def _capture_invalidate(param_name: str) -> None:
@@ -306,7 +306,7 @@ async def test_update_persists_into_the_general_settings_config_row(monkeypatch)
         "port": 6379,
         "password": "pw",
     }
-    assert persisted["master_key"] == "sk-1234"
+    assert persisted["master_key"] == "sk-litellm-test-master-key"
     assert invalidated == ["general_settings"]
 
     # the response echoes the saved settings back redacted

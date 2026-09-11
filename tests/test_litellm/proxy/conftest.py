@@ -146,7 +146,7 @@ def build_minimal_proxy_config(
     Args:
         database_url: Optional database URL (falls back to DATABASE_URL env var)
         **init_options: Additional configuration options:
-            - master_key: API key for authentication (default: "sk-1234")
+            - master_key: API key for authentication (default: "sk-litellm-test-master-key")
             - enable_cache: Whether to enable Redis cache (default: True)
             - success_callback: Callback function for success events
 
@@ -154,7 +154,7 @@ def build_minimal_proxy_config(
         dict: Configuration dictionary ready to be written as YAML
     """
     config = {
-        "general_settings": {"master_key": init_options.get("master_key", "sk-1234")},
+        "general_settings": {"master_key": init_options.get("master_key", "sk-litellm-test-master-key")},
         "litellm_settings": {},
     }
 
@@ -225,7 +225,7 @@ def create_proxy_test_client(
         monkeypatch: pytest monkeypatch fixture
         database_url: Optional database URL (falls back to DATABASE_URL env var)
         **init_options: Additional configuration options:
-            - master_key: API key for authentication (default: "sk-1234")
+            - master_key: API key for authentication (default: "sk-litellm-test-master-key")
             - enable_cache: Whether to enable Redis cache (default: True)
             - success_callback: Callback function for success events
             - debug: Enable debug mode

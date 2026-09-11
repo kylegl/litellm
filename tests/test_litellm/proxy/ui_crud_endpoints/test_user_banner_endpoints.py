@@ -60,7 +60,7 @@ def _mock_prisma(monkeypatch, record=None):
 class TestGetUserBanner:
     def test_requires_auth(self, monkeypatch):
         _mock_prisma(monkeypatch)
-        monkeypatch.setattr("litellm.proxy.proxy_server.master_key", "sk-1234")
+        monkeypatch.setattr("litellm.proxy.proxy_server.master_key", "sk-litellm-test-master-key")
         response = client.get("/get/user_banner")
         assert response.status_code in (401, 403)
 

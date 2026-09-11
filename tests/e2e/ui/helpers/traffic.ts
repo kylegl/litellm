@@ -11,7 +11,7 @@ export const DEPLOYMENT_MODEL_B = "openai/fake-claude";
 /** The only completion text fixtures/mock_llm_server/server.py ever returns. */
 export const MOCK_RESPONSE_TEXT = "This is a mock response.";
 
-export const masterKey = (): string => process.env.LITELLM_MASTER_KEY || "sk-1234";
+export const masterKey = (): string => process.env.LITELLM_MASTER_KEY || "sk-litellm-test-master-key";
 
 export const rootPath = (): string => process.env.SERVER_ROOT_PATH ?? "";
 

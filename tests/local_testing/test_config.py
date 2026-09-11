@@ -48,7 +48,7 @@ async def test_delete_deployment():
     )
     encrypted_litellm_params = litellm_params.dict(exclude_none=True)
 
-    master_key = "sk-1234"
+    master_key = "sk-litellm-test-master-key"
 
     setattr(litellm.proxy.proxy_server, "master_key", master_key)
 
@@ -146,7 +146,7 @@ async def test_add_existing_deployment():
 
     init_len_list = len(llm_router.model_list)
     print(f"llm_router: {llm_router}")
-    master_key = "sk-1234"
+    master_key = "sk-litellm-test-master-key"
     setattr(litellm.proxy.proxy_server, "llm_router", llm_router)
     setattr(litellm.proxy.proxy_server, "master_key", master_key)
     pc = ProxyConfig()
@@ -201,7 +201,7 @@ async def test_db_error_new_model_check():
 
     init_len_list = len(llm_router.model_list)
     print(f"llm_router: {llm_router}")
-    master_key = "sk-1234"
+    master_key = "sk-litellm-test-master-key"
     setattr(litellm.proxy.proxy_server, "llm_router", llm_router)
     setattr(litellm.proxy.proxy_server, "master_key", master_key)
     pc = ProxyConfig()
@@ -322,7 +322,7 @@ async def test_add_and_delete_deployments(llm_router, model_list_flag_value):
     - when router is init and not empty
     """
 
-    master_key = "sk-1234"
+    master_key = "sk-litellm-test-master-key"
     setattr(litellm.proxy.proxy_server, "llm_router", llm_router)
     setattr(litellm.proxy.proxy_server, "master_key", master_key)
     pc = ProxyConfig()

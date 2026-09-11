@@ -56,7 +56,7 @@ async def test_enterprise_custom_auth_returns_string():
             "litellm.proxy.auth.user_api_key_auth.enterprise_custom_auth",
             mock_user_auth,
         ),
-        patch("litellm.proxy.proxy_server.master_key", "sk-1234"),
+        patch("litellm.proxy.proxy_server.master_key", "sk-litellm-test-master-key"),
         patch("litellm.proxy.proxy_server.prisma_client", MagicMock()),
     ):
         # Verify the key is correctly handled in _user_api_key_auth_builder

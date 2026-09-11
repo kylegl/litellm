@@ -34,7 +34,7 @@ from tests._vcr_conftest_common import (  # noqa: E402,F401
 _verbose_state = VerboseReporterState()
 
 PROXY_CONFIG_PATH = Path(__file__).parent / "google_genai_proxy_test_config.yaml"
-PROXY_MASTER_KEY = "sk-1234"
+PROXY_MASTER_KEY = "sk-litellm-test-master-key"
 PROXY_START_TIMEOUT_S = 30.0
 
 
@@ -96,7 +96,6 @@ def google_genai_proxy_url() -> Iterator[str]:
     os.environ.pop("DATABASE_URL", None)
     os.environ.pop("DIRECT_URL", None)
     os.environ["LITELLM_MASTER_KEY"] = PROXY_MASTER_KEY
-    os.environ["LITELLM_ALLOW_INSECURE_MASTER_KEY"] = "true"
     os.environ["STORE_MODEL_IN_DB"] = "False"
 
     if has_vertex_credentials():

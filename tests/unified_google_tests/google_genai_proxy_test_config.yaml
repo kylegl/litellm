@@ -9,7 +9,7 @@ model_list:
       model: vertex_ai/gemini-2.5-flash-lite
 
 general_settings:
-  master_key: sk-1234
+  master_key: sk-litellm-test-master-key
   store_model_in_db: false
 
 litellm_settings:

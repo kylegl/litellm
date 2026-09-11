@@ -82,7 +82,7 @@ def _rendered_log_message(call):
 @pytest.fixture(autouse=True)
 def set_salt_key(monkeypatch):
     """Automatically set LITELLM_SALT_KEY for all tests"""
-    monkeypatch.setenv("LITELLM_SALT_KEY", "sk-1234")
+    monkeypatch.setenv("LITELLM_SALT_KEY", "sk-litellm-test-master-key")
 
 
 @pytest.fixture(autouse=True)

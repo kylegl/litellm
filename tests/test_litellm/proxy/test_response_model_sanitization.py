@@ -141,7 +141,7 @@ def test_proxy_chat_completion_does_not_return_provider_prefixed_model(
 
     client = _initialize_proxy_with_config(
         config={
-            "general_settings": {"master_key": "sk-1234"},
+            "general_settings": {"master_key": "sk-litellm-test-master-key"},
             "model_list": [
                 {
                     "model_name": client_model,
@@ -180,7 +180,7 @@ def test_proxy_chat_completion_does_not_return_provider_prefixed_model(
 
     resp = client.post(
         "/v1/chat/completions",
-        headers={"Authorization": "Bearer sk-1234"},
+        headers={"Authorization": "Bearer sk-litellm-test-master-key"},
         json={"model": client_model, "messages": [{"role": "user", "content": "hi"}]},
     )
 
@@ -240,7 +240,7 @@ async def test_proxy_streaming_chunks_do_not_return_provider_prefixed_model(
         MagicMock(return_value=True),
     )
 
-    user_api_key_dict = UserAPIKeyAuth(api_key="sk-1234")
+    user_api_key_dict = UserAPIKeyAuth(api_key="sk-litellm-test-master-key")
 
     gen = proxy_server.async_data_generator(
         response=MagicMock(),
@@ -313,7 +313,7 @@ async def test_proxy_streaming_chunks_use_client_requested_model_before_alias_ma
         MagicMock(return_value=True),
     )
 
-    user_api_key_dict = UserAPIKeyAuth(api_key="sk-1234")
+    user_api_key_dict = UserAPIKeyAuth(api_key="sk-litellm-test-master-key")
 
     gen = proxy_server.async_data_generator(
         response=MagicMock(),
@@ -385,7 +385,7 @@ async def test_proxy_streaming_azure_model_router_preserves_actual_model(monkeyp
         MagicMock(return_value=True),
     )
 
-    user_api_key_dict = UserAPIKeyAuth(api_key="sk-1234")
+    user_api_key_dict = UserAPIKeyAuth(api_key="sk-litellm-test-master-key")
 
     gen = proxy_server.async_data_generator(
         response=MagicMock(),
@@ -458,7 +458,7 @@ async def test_proxy_streaming_fastest_response_preserves_winning_model(monkeypa
         MagicMock(return_value=True),
     )
 
-    user_api_key_dict = UserAPIKeyAuth(api_key="sk-1234")
+    user_api_key_dict = UserAPIKeyAuth(api_key="sk-litellm-test-master-key")
 
     gen = proxy_server.async_data_generator(
         response=MagicMock(),

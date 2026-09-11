@@ -544,9 +544,9 @@ def test_prepare_mcp_server_headers_m2m_skips_authorization_from_raw_extra_heade
         server=server,
         mcp_server_auth_headers=None,
         mcp_auth_header=None,
-        oauth2_headers={"Authorization": "Bearer sk-1234"},
+        oauth2_headers={"Authorization": "Bearer sk-litellm-test-master-key"},
         raw_headers={
-            "authorization": "Bearer sk-1234",
+            "authorization": "Bearer sk-litellm-test-master-key",
             "x-custom": "trace",
         },
     )
@@ -708,8 +708,8 @@ async def test_call_tool_m2m_skips_authorization_headers():
             tasks=[],
             mcp_auth_header=None,
             mcp_server_auth_headers=None,
-            oauth2_headers={"Authorization": "Bearer sk-1234"},
-            raw_headers={"authorization": "Bearer sk-1234", "x-custom": "trace"},
+            oauth2_headers={"Authorization": "Bearer sk-litellm-test-master-key"},
+            raw_headers={"authorization": "Bearer sk-litellm-test-master-key", "x-custom": "trace"},
             proxy_logging_obj=None,
         )
 
@@ -5829,7 +5829,7 @@ async def test_list_tools_with_legacy_db_m2m_server_resolves_oauth2_flow():
     except ImportError:
         pytest.skip("MCP server not available")
 
-    user_auth = UserAPIKeyAuth(api_key="sk-1234", user_id="test-user")
+    user_auth = UserAPIKeyAuth(api_key="sk-litellm-test-master-key", user_id="test-user")
 
     # Simulate a legacy DB row: OAuth2 with M2M credentials but oauth2_flow=None
     legacy_server = MagicMock(name="legacy_m2m_server")
@@ -5902,7 +5902,7 @@ async def test_list_tools_with_legacy_db_m2m_server_resolves_oauth2_flow():
             mcp_auth_header=None,
             mcp_servers=["legacy_m2m"],
             mcp_server_auth_headers=None,
-            oauth2_headers={"Authorization": "Bearer sk-1234"},  # Caller's token
+            oauth2_headers={"Authorization": "Bearer sk-litellm-test-master-key"},  # Caller's token
         )
 
     # With P1 fix: _get_allowed_mcp_servers applies _resolve_oauth2_flow,
@@ -5948,7 +5948,7 @@ async def test_call_tool_empty_extra_headers_returns_none():
     )
 
     raw_headers = {
-        "Authorization": "Bearer sk-1234",
+        "Authorization": "Bearer sk-litellm-test-master-key",
         "Content-Type": "application/json",
     }
 
@@ -8190,7 +8190,7 @@ async def test_call_tool_with_legacy_db_m2m_server_resolves_oauth2_flow():
     except ImportError:
         pytest.skip("MCP server not available")
 
-    user_auth = UserAPIKeyAuth(api_key="sk-1234", user_id="test-user")
+    user_auth = UserAPIKeyAuth(api_key="sk-litellm-test-master-key", user_id="test-user")
 
     legacy_server = MCPServer(
         server_id="legacy-m2m-id",

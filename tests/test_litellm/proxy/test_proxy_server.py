@@ -1167,7 +1167,7 @@ def test_get_config_custom_callback_api_env_vars(monkeypatch):
     # Bypass auth dependency
     original_overrides = app.dependency_overrides.copy()
     app.dependency_overrides[user_api_key_auth] = lambda: UserAPIKeyAuth(
-        user_role=LitellmUserRoles.PROXY_ADMIN, api_key="sk-1234"
+        user_role=LitellmUserRoles.PROXY_ADMIN, api_key="sk-litellm-test-master-key"
     )
 
     client = TestClient(app)
@@ -1216,7 +1216,7 @@ def test_get_config_callbacks_fall_back_to_process_env(mock_env_vars, monkeypatc
 
     original_overrides = app.dependency_overrides.copy()
     app.dependency_overrides[user_api_key_auth] = lambda: UserAPIKeyAuth(
-        user_role=LitellmUserRoles.PROXY_ADMIN, api_key="sk-1234"
+        user_role=LitellmUserRoles.PROXY_ADMIN, api_key="sk-litellm-test-master-key"
     )
 
     client = TestClient(app)
@@ -1313,7 +1313,7 @@ def test_get_config_returns_email_settings(monkeypatch):
 
     original_overrides = app.dependency_overrides.copy()
     app.dependency_overrides[user_api_key_auth] = lambda: UserAPIKeyAuth(
-        user_role=LitellmUserRoles.PROXY_ADMIN, api_key="sk-1234"
+        user_role=LitellmUserRoles.PROXY_ADMIN, api_key="sk-litellm-test-master-key"
     )
 
     client = TestClient(app)
@@ -1350,7 +1350,7 @@ def _get_email_alert_variables(monkeypatch, config_data):
 
     original_overrides = app.dependency_overrides.copy()
     app.dependency_overrides[user_api_key_auth] = lambda: UserAPIKeyAuth(
-        user_role=LitellmUserRoles.PROXY_ADMIN, api_key="sk-1234"
+        user_role=LitellmUserRoles.PROXY_ADMIN, api_key="sk-litellm-test-master-key"
     )
 
     client = TestClient(app)
@@ -1475,7 +1475,7 @@ def test_get_config_returns_slack_webhook(monkeypatch):
 
     original_overrides = app.dependency_overrides.copy()
     app.dependency_overrides[user_api_key_auth] = lambda: UserAPIKeyAuth(
-        user_role=LitellmUserRoles.PROXY_ADMIN, api_key="sk-1234"
+        user_role=LitellmUserRoles.PROXY_ADMIN, api_key="sk-litellm-test-master-key"
     )
 
     client = TestClient(app)
@@ -1525,7 +1525,7 @@ def test_get_config_cleared_slack_webhook_not_overridden_by_os_env(monkeypatch):
 
     original_overrides = app.dependency_overrides.copy()
     app.dependency_overrides[user_api_key_auth] = lambda: UserAPIKeyAuth(
-        user_role=LitellmUserRoles.PROXY_ADMIN, api_key="sk-1234"
+        user_role=LitellmUserRoles.PROXY_ADMIN, api_key="sk-litellm-test-master-key"
     )
 
     client = TestClient(app)
@@ -4848,7 +4848,7 @@ class TestPriceDataReloadIntegration:
         """Test parsing of config file with reload settings"""
         config_content = """
 general_settings:
-  master_key: sk-1234
+  master_key: sk-litellm-test-master-key
   model_cost_map_reload_interval: 21600
 
 model_list:
@@ -6345,7 +6345,7 @@ def test_get_config_normalizes_string_callbacks(monkeypatch):
 
     original_overrides = app.dependency_overrides.copy()
     app.dependency_overrides[user_api_key_auth] = lambda: UserAPIKeyAuth(
-        user_role=LitellmUserRoles.PROXY_ADMIN, api_key="sk-1234"
+        user_role=LitellmUserRoles.PROXY_ADMIN, api_key="sk-litellm-test-master-key"
     )
 
     client = TestClient(app)
@@ -9019,7 +9019,7 @@ def _update_config_setup(monkeypatch):
         app.dependency_overrides[auth_dep] = lambda: UserAPIKeyAuth(
             user_id="test_admin",
             user_role=LitellmUserRoles.PROXY_ADMIN,
-            api_key="sk-1234",
+            api_key="sk-litellm-test-master-key",
         )
         client = TestClient(app)
 

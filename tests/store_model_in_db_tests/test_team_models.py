@@ -7,7 +7,7 @@ from litellm._uuid import uuid
 from httpx import AsyncClient
 import os
 
-TEST_MASTER_KEY = "sk-1234"
+TEST_MASTER_KEY = "sk-litellm-test-master-key"
 PROXY_BASE_URL = "http://0.0.0.0:4000"
 
 

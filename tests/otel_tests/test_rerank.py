@@ -55,7 +55,7 @@ async def test_basic_rerank_on_proxy():
         try:
             response = await make_rerank_curl_request(
                 session,
-                "sk-1234",
+                "sk-litellm-test-master-key",
                 query="What is the capital of the United States?",
                 documents=docs,
             )

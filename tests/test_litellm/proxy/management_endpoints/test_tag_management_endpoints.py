@@ -102,7 +102,7 @@ async def test_create_and_get_tag():
                 "models": ["model-1"],
             }
 
-            headers = {"Authorization": "Bearer sk-1234"}
+            headers = {"Authorization": "Bearer sk-litellm-test-master-key"}
 
             # Test tag creation
             response = client.post("/tag/new", json=tag_data, headers=headers)
@@ -201,7 +201,7 @@ async def test_update_tag():
                 "models": ["model-1", "model-2"],
             }
 
-            headers = {"Authorization": "Bearer sk-1234"}
+            headers = {"Authorization": "Bearer sk-litellm-test-master-key"}
 
             # Test tag update
             response = client.post("/tag/update", json=update_data, headers=headers)
@@ -256,7 +256,7 @@ async def test_delete_tag():
             # Delete tag data
             delete_data = {"name": "test-tag"}
 
-            headers = {"Authorization": "Bearer sk-1234"}
+            headers = {"Authorization": "Bearer sk-litellm-test-master-key"}
 
             # Test tag deletion
             response = client.post("/tag/delete", json=delete_data, headers=headers)
@@ -352,7 +352,7 @@ async def test_new_tag_invalidates_tag_and_registry_caches():
             response = client.post(
                 "/tag/new",
                 json={"name": "cache-tag"},
-                headers={"Authorization": "Bearer sk-1234"},
+                headers={"Authorization": "Bearer sk-litellm-test-master-key"},
             )
             assert response.status_code == 200
 
@@ -407,7 +407,7 @@ async def test_update_tag_invalidates_only_the_tag_cache():
             response = client.post(
                 "/tag/update",
                 json={"name": "cache-tag", "description": "updated"},
-                headers={"Authorization": "Bearer sk-1234"},
+                headers={"Authorization": "Bearer sk-litellm-test-master-key"},
             )
             assert response.status_code == 200
 
@@ -445,7 +445,7 @@ async def test_delete_tag_invalidates_tag_and_registry_caches():
             response = client.post(
                 "/tag/delete",
                 json={"name": "cache-tag"},
-                headers={"Authorization": "Bearer sk-1234"},
+                headers={"Authorization": "Bearer sk-litellm-test-master-key"},
             )
             assert response.status_code == 200
 
@@ -512,7 +512,7 @@ async def test_list_tags_with_dynamic_tags():
                 ]
             )
 
-            headers = {"Authorization": "Bearer sk-1234"}
+            headers = {"Authorization": "Bearer sk-litellm-test-master-key"}
             response = client.get("/tag/list", headers=headers)
 
             assert response.status_code == 200
@@ -573,7 +573,7 @@ async def test_list_tags_no_dynamic_tags():
 
             mock_db.litellm_dailytagspend.group_by = AsyncMock(return_value=[])
 
-            headers = {"Authorization": "Bearer sk-1234"}
+            headers = {"Authorization": "Bearer sk-litellm-test-master-key"}
             response = client.get("/tag/list", headers=headers)
 
             assert response.status_code == 200
@@ -744,7 +744,7 @@ async def test_list_tags_with_date_range_filters_dynamic_tags():
             group_by_mock = AsyncMock(return_value=[])
             mock_db.litellm_dailytagspend.group_by = group_by_mock
 
-            headers = {"Authorization": "Bearer sk-1234"}
+            headers = {"Authorization": "Bearer sk-litellm-test-master-key"}
             response = client.get(
                 "/tag/list?start_date=2026-04-01&end_date=2026-04-29",
                 headers=headers,
@@ -986,7 +986,7 @@ async def test_list_tags_without_date_range_omits_date_filter():
             group_by_mock = AsyncMock(return_value=[])
             mock_db.litellm_dailytagspend.group_by = group_by_mock
 
-            headers = {"Authorization": "Bearer sk-1234"}
+            headers = {"Authorization": "Bearer sk-litellm-test-master-key"}
             response = client.get("/tag/list", headers=headers)
 
             assert response.status_code == 200
@@ -1026,7 +1026,7 @@ async def test_list_tags_rejects_invalid_date_range(query, expected_detail_fragm
             mock_db.litellm_tagtable.find_many = AsyncMock(return_value=[])
             mock_db.litellm_dailytagspend.group_by = AsyncMock(return_value=[])
 
-            headers = {"Authorization": "Bearer sk-1234"}
+            headers = {"Authorization": "Bearer sk-litellm-test-master-key"}
             response = client.get(f"/tag/list{query}", headers=headers)
 
             assert response.status_code == 400

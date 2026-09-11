@@ -2,7 +2,7 @@ import openai
 import tempfile
 
 
-client = openai.OpenAI(base_url="http://0.0.0.0:4000/openai", api_key="sk-1234")
+client = openai.OpenAI(base_url="http://0.0.0.0:4000/openai", api_key="sk-litellm-test-master-key")
 
 
 def test_pass_through_file_operations():

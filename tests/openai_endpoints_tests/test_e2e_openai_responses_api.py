@@ -14,7 +14,7 @@ def generate_key():
     """Generate a key for testing"""
     url = "http://0.0.0.0:4000/key/generate"
     headers = {
-        "Authorization": "Bearer sk-1234",
+        "Authorization": "Bearer sk-litellm-test-master-key",
         "Content-Type": "application/json",
     }
     data = {}

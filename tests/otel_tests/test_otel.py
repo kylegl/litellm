@@ -19,7 +19,7 @@ async def generate_key(
     ],
 ):
     url = "http://0.0.0.0:4000/key/generate"
-    headers = {"Authorization": "Bearer sk-1234", "Content-Type": "application/json"}
+    headers = {"Authorization": "Bearer sk-litellm-test-master-key", "Content-Type": "application/json"}
     data = {
         "models": models,
         "duration": None,
@@ -100,7 +100,7 @@ async def test_chat_completion_check_otel_spans():
         await asyncio.sleep(3)
 
         # /otel-spans requires proxy admin; use the master key.
-        otel_spans = await get_otel_spans(session=session, key="sk-1234")
+        otel_spans = await get_otel_spans(session=session, key="sk-litellm-test-master-key")
         print("otel_spans: ", otel_spans)
 
         all_otel_spans = otel_spans["otel_spans"]

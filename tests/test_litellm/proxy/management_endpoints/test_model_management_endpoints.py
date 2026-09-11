@@ -306,7 +306,7 @@ class TestModelManagementAuthChecks:
         assert result is True
 
     def test_can_user_attach_credential_unchanged_encrypted_existing_allows_any_role(self, monkeypatch):
-        monkeypatch.setenv("LITELLM_SALT_KEY", "sk-1234")
+        monkeypatch.setenv("LITELLM_SALT_KEY", "sk-litellm-test-master-key")
         encrypted_name = encrypt_value_helper(value="shared-credential")
         assert encrypted_name != "shared-credential"
         result = ModelManagementAuthChecks.can_user_attach_credential(
@@ -3254,7 +3254,7 @@ class TestUpdateDBModelKeepsLegacyDropParams:
         from litellm.proxy.common_utils.encrypt_decrypt_utils import decrypt_value_helper
         from litellm.proxy.management_endpoints.model_management_endpoints import update_db_model
 
-        monkeypatch.setenv("LITELLM_SALT_KEY", "sk-1234")
+        monkeypatch.setenv("LITELLM_SALT_KEY", "sk-litellm-test-master-key")
         legacy_row = Deployment(
             model_name="gpt-5-nano",
             litellm_params=LiteLLM_Params(

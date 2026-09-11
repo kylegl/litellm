@@ -1718,7 +1718,7 @@ class TestVideoEndpointsProxyLitellmParams:
                 # Make request to video_status endpoint
                 response = client_with_vertex_config.get(
                     f"/v1/videos/{encoded_video_id}",
-                    headers={"Authorization": "Bearer sk-1234"},
+                    headers={"Authorization": "Bearer sk-litellm-test-master-key"},
                 )
 
                 # Verify the endpoint was called
@@ -1787,7 +1787,7 @@ class TestVideoEndpointsProxyLitellmParams:
                 # Make request to video_content endpoint
                 response = client_with_vertex_config.get(
                     f"/v1/videos/{encoded_video_id}/content",
-                    headers={"Authorization": "Bearer sk-1234"},
+                    headers={"Authorization": "Bearer sk-litellm-test-master-key"},
                 )
 
                 # Verify the endpoint was called
@@ -1856,7 +1856,7 @@ class TestVideoEndpointsProxyLitellmParams:
                 # Make request to video_content endpoint
                 response = client_with_vertex_config.get(
                     f"/v1/videos/{encoded_video_id}/content",
-                    headers={"Authorization": "Bearer sk-1234"},
+                    headers={"Authorization": "Bearer sk-litellm-test-master-key"},
                 )
 
                 # Verify the endpoint was called
@@ -2385,7 +2385,7 @@ def test_video_create_character_target_model_names_returns_encoded_id(
     ):
         response = video_proxy_test_client.post(
             "/v1/videos/characters",
-            headers={"Authorization": "Bearer sk-1234"},
+            headers={"Authorization": "Bearer sk-litellm-test-master-key"},
             files={"video": ("character.mp4", b"fake-video", "video/mp4")},
             data={
                 "name": "hero",
@@ -2438,7 +2438,7 @@ def test_video_get_character_accepts_encoded_character_id(video_proxy_test_clien
         ):
             response = video_proxy_test_client.get(
                 f"/v1/videos/characters/{encoded_character_id}",
-                headers={"Authorization": "Bearer sk-1234"},
+                headers={"Authorization": "Bearer sk-litellm-test-master-key"},
             )
 
     assert response.status_code == 200, response.text
@@ -2483,7 +2483,7 @@ def test_edit_and_extension_support_custom_provider_from_extra_body(
     ):
         response = video_proxy_test_client.post(
             endpoint,
-            headers={"Authorization": "Bearer sk-1234"},
+            headers={"Authorization": "Bearer sk-litellm-test-master-key"},
             json=payload,
         )
 
@@ -2549,7 +2549,7 @@ async def test_edit_and_extension_read_cached_body_after_auth_consumes_stream(
         await handler(
             request=request,
             fastapi_response=Response(),
-            user_api_key_dict=UserAPIKeyAuth(api_key="sk-1234"),
+            user_api_key_dict=UserAPIKeyAuth(api_key="sk-litellm-test-master-key"),
         )
 
     message = str(exc_info.value)
@@ -2595,7 +2595,7 @@ def test_edit_and_extension_route_with_encoded_video_ids(
         ):
             response = video_proxy_test_client.post(
                 endpoint,
-                headers={"Authorization": "Bearer sk-1234"},
+                headers={"Authorization": "Bearer sk-litellm-test-master-key"},
                 json=payload,
             )
 

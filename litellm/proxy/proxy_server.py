@@ -324,11 +324,7 @@ from litellm.proxy.auth.auth_utils import (
 from litellm.proxy.auth.fallback_model_access import router_fallback_access_check
 from litellm.proxy.auth.handle_jwt import JWTHandler
 from litellm.proxy.auth.litellm_license import AUTO_ROUTER_LICENSE_REMEDY, LicenseCheck
-from litellm.proxy.auth.master_key_policy import (
-    ALLOW_INSECURE_MASTER_KEY_ENV,
-    insecure_master_key_error,
-    insecure_master_key_warning,
-)
+from litellm.proxy.auth.master_key_policy import insecure_master_key_error
 from litellm.proxy.auth.model_checks import (
     expand_wildcard_deployments_for_model_info,
     get_all_fallbacks,
@@ -1164,16 +1160,10 @@ async def proxy_startup_event(app: FastAPI) -> AsyncGenerator[None, None]:
             if isinstance(worker_config, dict):
                 await initialize(**worker_config)
 
-    _allow_insecure_master_key: Final = str_to_bool(os.environ.get(ALLOW_INSECURE_MASTER_KEY_ENV)) is True
-    _insecure_master_key_error: Final = insecure_master_key_error(
-        master_key=master_key, allow_insecure=_allow_insecure_master_key
-    )
+    _insecure_master_key_error: Final = insecure_master_key_error(master_key=master_key)
     if _insecure_master_key_error is not None:
         verbose_proxy_logger.critical(_insecure_master_key_error)
         raise ValueError(_insecure_master_key_error)
-    _insecure_master_key_warning: Final = insecure_master_key_warning(master_key)
-    if _allow_insecure_master_key and _insecure_master_key_warning is not None:
-        verbose_proxy_logger.warning(_insecure_master_key_warning)
 
     # check if DATABASE_URL in environment - load from there
     if prisma_client is None:

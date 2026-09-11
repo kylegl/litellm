@@ -53,7 +53,7 @@ pytestmark = pytest.mark.skipif(
 
 
 CONFIG_PATH = Path(__file__).parent / "oci_proxy_test_config.yaml"
-MASTER_KEY = "sk-1234"
+MASTER_KEY = "sk-litellm-test-master-key"
 STARTUP_TIMEOUT_S = 90.0
 REQUEST_TIMEOUT_S = 120.0
 

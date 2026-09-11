@@ -524,7 +524,7 @@ def test_forward_headers_from_request_x_pass_prefix():
         "x-pass-custom-header": "custom-value",
         "x-pass-another-header": "another-value",
         "authorization": "Bearer sk-litellm-key",
-        "x-litellm-api-key": "sk-1234",
+        "x-litellm-api-key": "sk-litellm-test-master-key",
         "content-type": "application/json",
     }
 

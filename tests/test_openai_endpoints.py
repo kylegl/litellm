@@ -6,7 +6,7 @@ import aiohttp, openai
 from openai import OpenAI, AsyncOpenAI, AzureOpenAI, AsyncAzureOpenAI
 from typing import Optional, List, Union
 
-LITELLM_MASTER_KEY = "sk-1234"
+LITELLM_MASTER_KEY = "sk-litellm-test-master-key"
 
 
 def response_header_check(response):
@@ -28,7 +28,7 @@ async def generate_key(
     ],
 ):
     url = "http://0.0.0.0:4000/key/generate"
-    headers = {"Authorization": "Bearer sk-1234", "Content-Type": "application/json"}
+    headers = {"Authorization": "Bearer sk-litellm-test-master-key", "Content-Type": "application/json"}
     data = {
         "models": models,
         "duration": None,
@@ -53,7 +53,7 @@ async def generate_key(
 
 async def new_user(session):
     url = "http://0.0.0.0:4000/user/new"
-    headers = {"Authorization": "Bearer sk-1234", "Content-Type": "application/json"}
+    headers = {"Authorization": "Bearer sk-litellm-test-master-key", "Content-Type": "application/json"}
     data = {
         "models": ["gpt-4", "text-embedding-ada-002", "gpt-image-1"],
         "duration": None,
@@ -321,7 +321,7 @@ async def test_chat_completion_ratelimit():
     """
     async with aiohttp.ClientSession() as session:
         # key_gen = await generate_key(session=session)
-        key = "sk-1234"
+        key = "sk-litellm-test-master-key"
         tasks = []
         tasks.append(
             chat_completion(session=session, key=key, model="fake-openai-endpoint-2")
@@ -349,7 +349,7 @@ async def test_chat_completion_different_deployments():
     """
     async with aiohttp.ClientSession() as session:
         # key_gen = await generate_key(session=session)
-        key = "sk-1234"
+        key = "sk-litellm-test-master-key"
         results = []
         for _ in range(20):
             results.append(
@@ -375,7 +375,7 @@ async def test_chat_completion_streaming():
     """
     [PROD Test] Ensures logprobs are returned correctly
     """
-    client = AsyncOpenAI(api_key="sk-1234", base_url="http://0.0.0.0:4000")
+    client = AsyncOpenAI(api_key="sk-litellm-test-master-key", base_url="http://0.0.0.0:4000")
 
     response = await client.chat.completions.create(
         model="gpt-3.5-turbo-large",
@@ -398,7 +398,7 @@ async def test_completion_streaming_usage_metrics():
     """
     [PROD Test] Ensures usage metrics are returned correctly when `include_usage` is set to `True`
     """
-    client = AsyncOpenAI(api_key="sk-1234", base_url="http://0.0.0.0:4000")
+    client = AsyncOpenAI(api_key="sk-litellm-test-master-key", base_url="http://0.0.0.0:4000")
 
     response = await client.completions.create(
         model="gpt-instruct",
@@ -442,7 +442,7 @@ async def test_chat_completion_anthropic_structured_output():
         {"role": "user", "content": "List 5 important events in the XIX century"}
     ]
 
-    client = AsyncOpenAI(api_key="sk-1234", base_url="http://0.0.0.0:4000")
+    client = AsyncOpenAI(api_key="sk-litellm-test-master-key", base_url="http://0.0.0.0:4000")
 
     res = await client.beta.chat.completions.parse(
         model="bedrock/us.anthropic.claude-sonnet-4-5-20250929-v1:0",
@@ -571,7 +571,7 @@ async def test_batch_chat_completions():
         # call chat/completions with a model that the key was not created for + the model is not on the config.yaml
         response = await chat_completion(
             session=session,
-            key="sk-1234",
+            key="sk-litellm-test-master-key",
             model="gpt-3.5-turbo,fake-openai-endpoint",
         )
 
@@ -592,7 +592,7 @@ async def test_moderations_endpoint():
         # call chat/completions with a model that the key was not created for + the model is not on the config.yaml
         response = await moderation(
             session=session,
-            key="sk-1234",
+            key="sk-litellm-test-master-key",
         )
 
         print(f"response: {response}")

@@ -239,20 +239,20 @@ def _streaming_logging_obj():
 def test_stream_requires_guardrail_translation_route_detection():
     assert (
         ProxyLogging._stream_requires_guardrail_translation(
-            UserAPIKeyAuth(api_key="sk-1234", request_route="/v1/messages")
+            UserAPIKeyAuth(api_key="sk-litellm-test-master-key", request_route="/v1/messages")
         )
         is True
     )
     assert (
         ProxyLogging._stream_requires_guardrail_translation(
-            UserAPIKeyAuth(api_key="sk-1234", request_route="/chat/completions")
+            UserAPIKeyAuth(api_key="sk-litellm-test-master-key", request_route="/chat/completions")
         )
         is False
     )
-    assert ProxyLogging._stream_requires_guardrail_translation(UserAPIKeyAuth(api_key="sk-1234")) is False
+    assert ProxyLogging._stream_requires_guardrail_translation(UserAPIKeyAuth(api_key="sk-litellm-test-master-key")) is False
     assert (
         ProxyLogging._stream_requires_guardrail_translation(
-            UserAPIKeyAuth(api_key="sk-1234", request_route="/route/without/call/types")
+            UserAPIKeyAuth(api_key="sk-litellm-test-master-key", request_route="/route/without/call/types")
         )
         is False
     )
@@ -294,7 +294,7 @@ async def test_post_call_stream_guardrail_blocks_anthropic_messages_stream(monke
     async def _drain():
         async for chunk in proxy_logging.async_post_call_streaming_iterator_hook(
             response=fake_stream(),
-            user_api_key_dict=UserAPIKeyAuth(api_key="sk-1234", request_route="/v1/messages"),
+            user_api_key_dict=UserAPIKeyAuth(api_key="sk-litellm-test-master-key", request_route="/v1/messages"),
             request_data=request_data,
         ):
             delivered.append(chunk)
@@ -335,7 +335,7 @@ async def test_post_call_stream_guardrail_keeps_own_iterator_on_chat_completions
     delivered_text = ""
     async for chunk in proxy_logging.async_post_call_streaming_iterator_hook(
         response=fake_stream(),
-        user_api_key_dict=UserAPIKeyAuth(api_key="sk-1234", request_route="/chat/completions"),
+        user_api_key_dict=UserAPIKeyAuth(api_key="sk-litellm-test-master-key", request_route="/chat/completions"),
         request_data={"model": "gpt-4o-mini", "metadata": {}},
     ):
         for choice in chunk.choices:
@@ -369,7 +369,7 @@ async def test_unified_guardrail_iterator_accepts_explicit_guardrail():
 
     delivered = []
     async for item in unified_guardrail.async_post_call_streaming_iterator_hook(
-        user_api_key_dict=UserAPIKeyAuth(api_key="sk-1234", request_route="/v1/messages"),
+        user_api_key_dict=UserAPIKeyAuth(api_key="sk-litellm-test-master-key", request_route="/v1/messages"),
         response=fake_stream(),
         request_data=request_data,
         guardrail_to_apply=guardrail,
@@ -422,7 +422,7 @@ async def test_post_call_stream_guardrail_reroutes_inherited_apply_guardrail(mon
     async def _drain():
         async for chunk in proxy_logging.async_post_call_streaming_iterator_hook(
             response=fake_stream(),
-            user_api_key_dict=UserAPIKeyAuth(api_key="sk-1234", request_route="/v1/messages"),
+            user_api_key_dict=UserAPIKeyAuth(api_key="sk-litellm-test-master-key", request_route="/v1/messages"),
             request_data=request_data,
         ):
             delivered.append(chunk)
@@ -474,7 +474,7 @@ async def test_post_call_stream_masking_guardrail_keeps_own_iterator_on_anthropi
     delivered = []
     async for chunk in proxy_logging.async_post_call_streaming_iterator_hook(
         response=fake_stream(),
-        user_api_key_dict=UserAPIKeyAuth(api_key="sk-1234", request_route="/v1/messages"),
+        user_api_key_dict=UserAPIKeyAuth(api_key="sk-litellm-test-master-key", request_route="/v1/messages"),
         request_data={
             "model": "claude-sonnet-5",
             "litellm_logging_obj": _streaming_logging_obj(),
@@ -545,7 +545,7 @@ async def test_execute_guardrail_hook_routes_apply_guardrail_implementers_to_uni
         callback=guardrail,
         hook_type=hook_type,
         data=data,
-        user_api_key_dict=UserAPIKeyAuth(api_key="sk-1234"),
+        user_api_key_dict=UserAPIKeyAuth(api_key="sk-litellm-test-master-key"),
         call_type="completion",
         response=None,
     )
@@ -565,7 +565,7 @@ async def test_execute_guardrail_hook_keeps_native_hooks_when_opted_out(hook_typ
         callback=guardrail,
         hook_type=hook_type,
         data=data,
-        user_api_key_dict=UserAPIKeyAuth(api_key="sk-1234"),
+        user_api_key_dict=UserAPIKeyAuth(api_key="sk-litellm-test-master-key"),
         call_type="completion",
         response=None,
     )
@@ -595,7 +595,7 @@ async def test_during_call_hook_keeps_native_moderation_hook_when_opted_out(monk
 
     await ProxyLogging(user_api_key_cache=DualCache()).during_call_hook(
         data={"messages": [{"role": "user", "content": "hi"}]},
-        user_api_key_dict=UserAPIKeyAuth(api_key="sk-1234"),
+        user_api_key_dict=UserAPIKeyAuth(api_key="sk-litellm-test-master-key"),
         call_type="completion",
     )
 
@@ -615,7 +615,7 @@ async def test_post_call_success_hook_keeps_native_hook_when_opted_out(monkeypat
     await ProxyLogging(user_api_key_cache=DualCache()).post_call_success_hook(
         data={"messages": [{"role": "user", "content": "hi"}]},
         response=response,
-        user_api_key_dict=UserAPIKeyAuth(api_key="sk-1234"),
+        user_api_key_dict=UserAPIKeyAuth(api_key="sk-litellm-test-master-key"),
     )
 
     assert opted_out.native_hooks_ran == ["post_call"]
@@ -661,7 +661,7 @@ async def test_deferred_stream_guardrails_run_native_hook_when_opted_out(monkeyp
 
     await ProxyBaseLLMRequestProcessing._run_deferred_stream_guardrails(
         captured_data={"messages": [{"role": "user", "content": "hi"}]},
-        captured_user_api_key_dict=UserAPIKeyAuth(api_key="sk-1234"),
+        captured_user_api_key_dict=UserAPIKeyAuth(api_key="sk-litellm-test-master-key"),
         captured_logging_obj=_streaming_logging_obj(),
         assembled_response=ModelResponse(choices=[Choices(message=Message(role="assistant", content="hello"))]),
         cache_hit=False,
@@ -688,7 +688,7 @@ async def test_deferred_stream_guardrails_skip_pipeline_managed_native_hook(monk
             "messages": [{"role": "user", "content": "hi"}],
             "metadata": {"_guardrail_pipelines": [("response-governance", pipeline)]},
         },
-        captured_user_api_key_dict=UserAPIKeyAuth(api_key="sk-1234", request_route="/v1/chat/completions"),
+        captured_user_api_key_dict=UserAPIKeyAuth(api_key="sk-litellm-test-master-key", request_route="/v1/chat/completions"),
         captured_logging_obj=_streaming_logging_obj(),
         assembled_response=ModelResponse(choices=[Choices(message=Message(role="assistant", content="hello"))]),
         cache_hit=False,
@@ -725,7 +725,7 @@ async def test_deferred_stream_guardrails_run_native_hook_whose_pipeline_could_n
             "messages": [{"role": "user", "content": "hi"}],
             "metadata": {"_guardrail_pipelines": [("response-governance", pipeline)]},
         },
-        captured_user_api_key_dict=UserAPIKeyAuth(api_key="sk-1234", request_route="/v1/chat/completions"),
+        captured_user_api_key_dict=UserAPIKeyAuth(api_key="sk-litellm-test-master-key", request_route="/v1/chat/completions"),
         captured_logging_obj=_streaming_logging_obj(),
         assembled_response=ModelResponse(choices=[Choices(message=Message(role="assistant", content="hello"))]),
         cache_hit=False,
@@ -751,7 +751,7 @@ async def test_deferred_stream_guardrails_run_native_hook_on_route_without_trans
             "messages": [{"role": "user", "content": "hi"}],
             "metadata": {"_guardrail_pipelines": [("response-governance", pipeline)]},
         },
-        captured_user_api_key_dict=UserAPIKeyAuth(api_key="sk-1234", request_route="/custom/stream"),
+        captured_user_api_key_dict=UserAPIKeyAuth(api_key="sk-litellm-test-master-key", request_route="/custom/stream"),
         captured_logging_obj=_streaming_logging_obj(),
         assembled_response=ModelResponse(choices=[Choices(message=Message(role="assistant", content="hello"))]),
         cache_hit=False,
@@ -824,7 +824,7 @@ async def test_post_call_stream_keeps_own_iterator_when_opted_out(monkeypatch):
     delivered = []
     async for chunk in ProxyLogging(user_api_key_cache=DualCache()).async_post_call_streaming_iterator_hook(
         response=fake_stream(),
-        user_api_key_dict=UserAPIKeyAuth(api_key="sk-1234", request_route="/v1/messages"),
+        user_api_key_dict=UserAPIKeyAuth(api_key="sk-litellm-test-master-key", request_route="/v1/messages"),
         request_data={"model": "claude-sonnet-5", "litellm_logging_obj": _streaming_logging_obj(), "metadata": {}},
     ):
         delivered.append(chunk)
@@ -847,7 +847,7 @@ async def test_parallel_post_call_guardrails_keep_native_hook_when_opted_out(mon
     await ProxyLogging(user_api_key_cache=DualCache()).post_call_success_hook(
         data={"messages": [{"role": "user", "content": "hi"}]},
         response=response,
-        user_api_key_dict=UserAPIKeyAuth(api_key="sk-1234"),
+        user_api_key_dict=UserAPIKeyAuth(api_key="sk-litellm-test-master-key"),
     )
 
     assert opted_out.native_hooks_ran == ["post_call"]

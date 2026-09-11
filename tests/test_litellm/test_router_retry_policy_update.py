@@ -381,7 +381,7 @@ async def test_config_update_persists_and_reads_back_retry_policy(monkeypatch):
     await proxy_server.update_config(
         config_info=ConfigYAML(router_settings=posted),
         request=request,
-        user_api_key_dict=UserAPIKeyAuth(user_role=LitellmUserRoles.PROXY_ADMIN, api_key="sk-1234"),
+        user_api_key_dict=UserAPIKeyAuth(user_role=LitellmUserRoles.PROXY_ADMIN, api_key="sk-litellm-test-master-key"),
     )
 
     persisted = fake_table.rows["router_settings"].param_value["retry_policy"]
@@ -397,7 +397,7 @@ async def test_config_update_persists_and_reads_back_retry_policy(monkeypatch):
     read_back = (
         await proxy_server.get_config(
             user_api_key_dict=UserAPIKeyAuth(
-                user_role=LitellmUserRoles.PROXY_ADMIN, api_key="sk-1234"
+                user_role=LitellmUserRoles.PROXY_ADMIN, api_key="sk-litellm-test-master-key"
             )
         )
     )["router_settings"]["retry_policy"]

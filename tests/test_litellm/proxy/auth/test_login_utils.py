@@ -62,9 +62,9 @@ def test_get_ui_credentials_requires_password():
 @pytest.mark.asyncio
 async def test_authenticate_user_admin_login_with_ui_credentials():
     """Test admin login using UI_USERNAME and UI_PASSWORD"""
-    master_key = "sk-1234"
+    master_key = "sk-litellm-test-master-key"
     ui_username = "admin"
-    ui_password = "sk-1234"
+    ui_password = "sk-litellm-test-master-key"
 
     mock_prisma_client = MagicMock()
     mock_prisma_client.db.litellm_usertable.find_first = AsyncMock(return_value=None)
@@ -113,7 +113,7 @@ async def test_authenticate_user_admin_login_with_ui_credentials():
 @pytest.mark.asyncio
 async def test_authenticate_user_admin_login_with_master_key_as_password(monkeypatch):
     """Test admin login when UI_PASSWORD is not set, should use master_key"""
-    master_key = "sk-1234"
+    master_key = "sk-litellm-test-master-key"
     ui_username = "admin"
 
     mock_prisma_client = MagicMock()
@@ -167,7 +167,7 @@ async def test_authenticate_user_admin_login_with_master_key_as_password(monkeyp
 @pytest.mark.asyncio
 async def test_authenticate_user_invalid_credentials():
     """Test authentication failure with invalid credentials"""
-    master_key = "sk-1234"
+    master_key = "sk-litellm-test-master-key"
     ui_username = "admin"
     wrong_password = "wrong-password"
 
@@ -210,7 +210,7 @@ async def test_authenticate_user_missing_master_key():
 @pytest.mark.asyncio
 async def test_authenticate_user_wrong_password():
     """Test authentication failure with wrong password for database user"""
-    master_key = "sk-1234"
+    master_key = "sk-litellm-test-master-key"
     user_email = "test@example.com"
     correct_password = "correct-password"
     wrong_password = "wrong-password"
@@ -250,7 +250,7 @@ async def test_authenticate_user_wrong_password():
 @pytest.mark.asyncio
 async def test_authenticate_user_email_case_insensitive_login():
     """Test that email lookup is case-insensitive during login"""
-    master_key = "sk-1234"
+    master_key = "sk-litellm-test-master-key"
     stored_email = "testemail@test.com"
     login_email_mixed_case = "testEmail@test.com"
     correct_password = "correct-password"
@@ -320,9 +320,9 @@ async def test_authenticate_user_email_case_insensitive_login():
 @pytest.mark.asyncio
 async def test_authenticate_user_database_required_for_admin(monkeypatch):
     """Test that database is required for admin login"""
-    master_key = "sk-1234"
+    master_key = "sk-litellm-test-master-key"
     ui_username = "admin"
-    ui_password = "sk-1234"
+    ui_password = "sk-litellm-test-master-key"
 
     mock_prisma_client = MagicMock()
     mock_prisma_client.db.litellm_usertable.find_first = AsyncMock(return_value=None)
@@ -358,9 +358,9 @@ async def test_authenticate_user_database_required_for_admin(monkeypatch):
 @pytest.mark.asyncio
 async def test_authenticate_user_admin_login_with_non_ascii_characters():
     """Test admin login with non-ASCII characters in password (issue #19559)"""
-    master_key = "sk-1234"
+    master_key = "sk-litellm-test-master-key"
     ui_username = "admin£test"
-    ui_password = "sk-1234£pass"
+    ui_password = "sk-litellm-test-master-key£pass"
 
     mock_prisma_client = MagicMock()
     mock_prisma_client.db.litellm_usertable.find_first = AsyncMock(return_value=None)
@@ -431,9 +431,9 @@ async def test_authenticate_user_multiple_logins_generate_unique_tokens():
     This test verifies that users can have multiple concurrent UI sessions.
     Previous UI session tokens should NOT be expired/blocked when a new session is created.
     """
-    master_key = "sk-1234"
+    master_key = "sk-litellm-test-master-key"
     ui_username = "admin"
-    ui_password = "sk-1234"
+    ui_password = "sk-litellm-test-master-key"
 
     mock_prisma_client = MagicMock()
     mock_prisma_client.db.litellm_usertable.find_first = AsyncMock(return_value=None)
@@ -501,7 +501,7 @@ async def test_authenticate_user_multiple_logins_generate_unique_tokens():
 @pytest.mark.asyncio
 async def test_authenticate_user_database_login_with_non_ascii_password():
     """Test database user login with non-ASCII characters in password (issue #19559)"""
-    master_key = "sk-1234"
+    master_key = "sk-litellm-test-master-key"
     user_email = "test@example.com"
     password_with_special_char = "correct£password"
     hashed_password = hash_token(token=password_with_special_char)
@@ -647,7 +647,7 @@ class TestDisablePasswordLoginWhenSSOEnabled:
 
     @pytest.mark.asyncio
     async def test_rejects_correct_admin_credentials_when_sso_configured(self):
-        master_key = "sk-1234"
+        master_key = "sk-litellm-test-master-key"
         ui_username = "admin"
 
         mock_prisma_client = MagicMock()
@@ -672,7 +672,7 @@ class TestDisablePasswordLoginWhenSSOEnabled:
 
     @pytest.mark.asyncio
     async def test_rejects_correct_db_user_credentials_when_sso_configured(self):
-        master_key = "sk-1234"
+        master_key = "sk-litellm-test-master-key"
         user_email = "test@example.com"
         password = "correct-password"
 
@@ -704,7 +704,7 @@ class TestDisablePasswordLoginWhenSSOEnabled:
     async def test_allows_password_login_when_setting_enabled_but_sso_not_configured(self):
         """The setting alone must not lock out an admin who has not actually
         configured SSO — there would be no fallback left."""
-        master_key = "sk-1234"
+        master_key = "sk-litellm-test-master-key"
         ui_username = "admin"
 
         mock_prisma_client = MagicMock()
@@ -740,7 +740,7 @@ class TestDisablePasswordLoginWhenSSOEnabled:
         fail. The gate must read the real env (no is_sso_provider_fully_configured
         mock here) and still let password login through, or an admin who set
         one env var by mistake is locked out with no way in."""
-        master_key = "sk-1234"
+        master_key = "sk-litellm-test-master-key"
         ui_username = "admin"
 
         mock_prisma_client = MagicMock()
@@ -773,7 +773,7 @@ class TestDisablePasswordLoginWhenSSOEnabled:
     async def test_allows_password_login_when_sso_configured_but_setting_not_enabled(self):
         """SSO being configured must not, by itself, disable the password
         fallback: the setting is opt-in."""
-        master_key = "sk-1234"
+        master_key = "sk-litellm-test-master-key"
         ui_username = "admin"
 
         mock_prisma_client = MagicMock()
@@ -811,7 +811,7 @@ class TestDisableEnvCredentialLogin:
 
     @pytest.mark.asyncio
     async def test_rejects_correct_env_credentials_when_disabled(self):
-        master_key = "sk-1234"
+        master_key = "sk-litellm-test-master-key"
         ui_username = "admin"
         ui_password = "env-only-password"
 
@@ -837,7 +837,7 @@ class TestDisableEnvCredentialLogin:
     async def test_rejects_master_key_fallback_when_disabled(self):
         """With UI_PASSWORD unset, the master key IS the env password, so the
         setting must reject it too or it protects nothing by default."""
-        master_key = "sk-1234"
+        master_key = "sk-litellm-test-master-key"
 
         mock_prisma_client = MagicMock()
         mock_prisma_client.db.litellm_usertable.find_first = AsyncMock(return_value=None)
@@ -856,7 +856,7 @@ class TestDisableEnvCredentialLogin:
 
     @pytest.mark.asyncio
     async def test_db_user_login_still_works_when_disabled(self):
-        master_key = "sk-1234"
+        master_key = "sk-litellm-test-master-key"
         user_email = "admin@example.com"
         password = "Str0ng!Passw0rd"
 
@@ -902,7 +902,7 @@ class TestDisableEnvCredentialLogin:
     async def test_env_login_still_works_when_setting_absent(self):
         """Env-credential login is the bootstrap path on a fresh install and
         must stay on by default."""
-        master_key = "sk-1234"
+        master_key = "sk-litellm-test-master-key"
         ui_username = "admin"
 
         mock_prisma_client = MagicMock()

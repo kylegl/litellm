@@ -78,7 +78,7 @@ describe('Vertex AI Tests', () => {
         });
 
         const customHeaders = new Headers({
-            "x-litellm-api-key": "sk-1234",
+            "x-litellm-api-key": "sk-litellm-test-master-key",
             "tags": "vertex-js-sdk,pass-through-endpoint"
         });
 
@@ -113,7 +113,7 @@ describe('Vertex AI Tests', () => {
             await new Promise(resolve => setTimeout(resolve, 10000));
             const spendResponse = await fetch(
                 `http://127.0.0.1:4000/spend/logs?request_id=${callId}`,
-                { headers: { 'Authorization': 'Bearer sk-1234' } }
+                { headers: { 'Authorization': 'Bearer sk-litellm-test-master-key' } }
             );
             spendData = await spendResponse.json();
             console.log(`spendData (attempt ${attempt + 1}):`, spendData);
@@ -142,7 +142,7 @@ describe('Vertex AI Tests', () => {
         });
 
         const customHeaders = new Headers({
-            "x-litellm-api-key": "sk-1234",
+            "x-litellm-api-key": "sk-litellm-test-master-key",
             "tags": "vertex-js-sdk,pass-through-endpoint"
         });
 
@@ -190,7 +190,7 @@ describe('Vertex AI Tests', () => {
             await new Promise(resolve => setTimeout(resolve, 10000));
             const spendResponse = await fetch(
                 `http://127.0.0.1:4000/spend/logs?request_id=${callId}`,
-                { headers: { 'Authorization': 'Bearer sk-1234' } }
+                { headers: { 'Authorization': 'Bearer sk-litellm-test-master-key' } }
             );
             spendData = await spendResponse.json();
             console.log(`spendData (attempt ${attempt + 1}):`, spendData);

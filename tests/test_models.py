@@ -14,7 +14,7 @@ load_dotenv()
 
 async def generate_key(session, models=[]):
     url = "http://0.0.0.0:4000/key/generate"
-    headers = {"Authorization": "Bearer sk-1234", "Content-Type": "application/json"}
+    headers = {"Authorization": "Bearer sk-litellm-test-master-key", "Content-Type": "application/json"}
     data = {
         "models": models,
         "duration": None,
@@ -73,7 +73,7 @@ async def test_get_models_multiple_tests():
 
 
 async def add_models(
-    session, model_id="123", model_name="azure-gpt-3.5", key="sk-1234", team_id=None
+    session, model_id="123", model_name="azure-gpt-3.5", key="sk-litellm-test-master-key", team_id=None
 ):
     url = "http://0.0.0.0:4000/model/new"
     headers = {
@@ -107,7 +107,7 @@ async def add_models(
 
 
 async def update_model(
-    session, model_id="123", model_name="azure-gpt-3.5", key="sk-1234"
+    session, model_id="123", model_name="azure-gpt-3.5", key="sk-litellm-test-master-key"
 ):
     url = "http://0.0.0.0:4000/model/update"
     headers = {
@@ -247,7 +247,7 @@ async def test_get_specific_model():
         )
 
 
-async def delete_model(session, model_id="123", key="sk-1234"):
+async def delete_model(session, model_id="123", key="sk-litellm-test-master-key"):
     """
     Make sure only models user has access to are returned
     """
@@ -304,7 +304,7 @@ async def test_add_and_delete_models():
 async def add_model_for_health_checking(session, model_id="123"):
     url = "http://0.0.0.0:4000/model/new"
     headers = {
-        "Authorization": f"Bearer sk-1234",
+        "Authorization": f"Bearer sk-litellm-test-master-key",
         "Content-Type": "application/json",
     }
 
@@ -407,7 +407,7 @@ async def test_add_model_run_health():
     async with aiohttp.ClientSession() as session:
         key_gen = await generate_key(session=session)
         key = key_gen["key"]
-        master_key = "sk-1234"
+        master_key = "sk-litellm-test-master-key"
         model_id = str(uuid.uuid4())
         model_name = f"azure-model-health-check-{model_id}"
         print("adding model", model_name)
@@ -490,10 +490,10 @@ async def test_model_group_info_e2e():
     Test /model/group/info endpoint
     """
     async with aiohttp.ClientSession() as session:
-        models = await get_models(session=session, key="sk-1234")
+        models = await get_models(session=session, key="sk-litellm-test-master-key")
         print(models)
 
-        model_group_info = await get_model_group_info(session=session, key="sk-1234")
+        model_group_info = await get_model_group_info(session=session, key="sk-litellm-test-master-key")
         print(model_group_info)
 
         model_groups: Final = [m["model_group"] for m in model_group_info["data"]]

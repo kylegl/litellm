@@ -6,7 +6,7 @@ import httpx
 
 def generate_key_sync():
     url = "http://0.0.0.0:4000/key/generate"
-    headers = {"Authorization": "Bearer sk-1234", "Content-Type": "application/json"}
+    headers = {"Authorization": "Bearer sk-litellm-test-master-key", "Content-Type": "application/json"}
 
     with httpx.Client() as client:
         response = client.post(
@@ -92,10 +92,10 @@ async def test_async_chat_completion_bad_model():
 @pytest.mark.parametrize(
     "curl_command",
     [
-        'curl http://0.0.0.0:4000/v1/chat/completions -H \'Content-Type: application/json\' -H \'Authorization: Bearer sk-1234\' -d \'{"messages":[{"role":"user","content":"Hello!"}]}\'',
-        "curl http://0.0.0.0:4000/v1/completions -H 'Content-Type: application/json' -H 'Authorization: Bearer sk-1234' -d '{\"prompt\":\"Hello!\"}'",
-        "curl http://0.0.0.0:4000/v1/embeddings -H 'Content-Type: application/json' -H 'Authorization: Bearer sk-1234' -d '{\"input\":\"Hello world\"}'",
-        "curl http://0.0.0.0:4000/v1/images/generations -H 'Content-Type: application/json' -H 'Authorization: Bearer sk-1234' -d '{\"prompt\":\"A cute baby sea otter\"}'",
+        'curl http://0.0.0.0:4000/v1/chat/completions -H \'Content-Type: application/json\' -H \'Authorization: Bearer sk-litellm-test-master-key\' -d \'{"messages":[{"role":"user","content":"Hello!"}]}\'',
+        "curl http://0.0.0.0:4000/v1/completions -H 'Content-Type: application/json' -H 'Authorization: Bearer sk-litellm-test-master-key' -d '{\"prompt\":\"Hello!\"}'",
+        "curl http://0.0.0.0:4000/v1/embeddings -H 'Content-Type: application/json' -H 'Authorization: Bearer sk-litellm-test-master-key' -d '{\"input\":\"Hello world\"}'",
+        "curl http://0.0.0.0:4000/v1/images/generations -H 'Content-Type: application/json' -H 'Authorization: Bearer sk-litellm-test-master-key' -d '{\"prompt\":\"A cute baby sea otter\"}'",
     ],
     ids=["chat", "completions", "embeddings", "images"],
 )
@@ -105,7 +105,7 @@ def test_missing_model_parameter_curl(curl_command):
 
     # Run the curl command and capture the output
     key = generate_key_sync()
-    curl_command = curl_command.replace("sk-1234", key)
+    curl_command = curl_command.replace("sk-litellm-test-master-key", key)
     result = subprocess.run(
         f'{curl_command} -s -w "\\n%{{http_code}}"',
         shell=True,
@@ -168,7 +168,7 @@ async def test_chat_completion_bad_model_with_spend_logs():
 
     # Now query the spend logs
     url = "http://0.0.0.0:4000/spend/logs?request_id=" + litellm_call_id
-    headers = {"Authorization": f"Bearer sk-1234", "Content-Type": "application/json"}
+    headers = {"Authorization": f"Bearer sk-litellm-test-master-key", "Content-Type": "application/json"}
 
     with httpx.Client() as client:
         response = client.get(

@@ -81,7 +81,7 @@ class TestLangfusePromptManagement:
         with (
             patch(
                 "litellm.integrations.langfuse.langfuse_prompt_management.resolve_langfuse_credentials",
-                return_value=("pk-1234", "sk-1234", "https://localhost"),
+                return_value=("pk-1234", "sk-litellm-test-master-key", "https://localhost"),
             ),
             patch(
                 "litellm.integrations.langfuse.langfuse_prompt_management.LangFuseLogger._get_langfuse_flush_interval",
@@ -97,7 +97,7 @@ class TestLangfusePromptManagement:
 
             langfuse_client_init(
                 langfuse_public_key="pk-1234",
-                langfuse_secret="sk-1234",
+                langfuse_secret="sk-litellm-test-master-key",
                 langfuse_host="https://localhost",
             )
 

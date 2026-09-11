@@ -29,7 +29,7 @@ async def health(session, call_key):
 
 async def generate_key(session):
     url = "http://0.0.0.0:4000/key/generate"
-    headers = {"Authorization": "Bearer sk-1234", "Content-Type": "application/json"}
+    headers = {"Authorization": "Bearer sk-litellm-test-master-key", "Content-Type": "application/json"}
     data = {
         "models": ["gpt-4", "text-embedding-ada-002", "gpt-image-1"],
         "duration": None,
@@ -54,7 +54,7 @@ async def test_health():
     """
     async with aiohttp.ClientSession() as session:
         # as admin #
-        all_healthy_models = await health(session=session, call_key="sk-1234")
+        all_healthy_models = await health(session=session, call_key="sk-litellm-test-master-key")
         total_model_count = (
             all_healthy_models["healthy_count"] + all_healthy_models["unhealthy_count"]
         )
@@ -86,7 +86,7 @@ async def test_health_readiness_details():
     """
     async with aiohttp.ClientSession() as session:
         url = "http://0.0.0.0:4000/health/readiness/details"
-        headers = {"Authorization": "Bearer sk-1234"}
+        headers = {"Authorization": "Bearer sk-litellm-test-master-key"}
         async with session.get(url, headers=headers) as response:
             status = response.status
             response_json = await response.json()

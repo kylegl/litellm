@@ -38,7 +38,7 @@ async def wait_for_proxy_ready(session, timeout: int = 60):
 
 async def config_update(session, routing_strategy=None):
     url = f"{PROXY_BASE_URL}/config/update"
-    headers = {"Authorization": "Bearer sk-1234", "Content-Type": "application/json"}
+    headers = {"Authorization": "Bearer sk-litellm-test-master-key", "Content-Type": "application/json"}
     print("routing_strategy: ", routing_strategy)
     data = {
         "litellm_settings": {"success_callback": ["langfuse"]},
@@ -74,7 +74,7 @@ async def check_langfuse_request(response_id: str):
 
 
 async def make_chat_completions_request() -> ChatCompletion:
-    client = AsyncOpenAI(api_key="sk-1234", base_url=PROXY_BASE_URL)
+    client = AsyncOpenAI(api_key="sk-litellm-test-master-key", base_url=PROXY_BASE_URL)
     last_error = None
     for _ in range(10):
         try:

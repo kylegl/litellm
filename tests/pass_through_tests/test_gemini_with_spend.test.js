@@ -22,7 +22,7 @@ jest.retryTimes(3);
 
 describe('Gemini AI Tests', () => {
     test('should successfully generate non-streaming content with tags', async () => {
-        const genAI = new GoogleGenerativeAI("sk-1234"); // litellm proxy API key
+        const genAI = new GoogleGenerativeAI("sk-litellm-test-master-key"); // litellm proxy API key
 
         const requestOptions = {
             baseUrl: 'http://127.0.0.1:4000/gemini',
@@ -50,7 +50,7 @@ describe('Gemini AI Tests', () => {
             await new Promise(resolve => setTimeout(resolve, 10000));
             const spendResponse = await fetch(
                 `http://127.0.0.1:4000/spend/logs?request_id=${callId}`,
-                { headers: { 'Authorization': 'Bearer sk-1234' } }
+                { headers: { 'Authorization': 'Bearer sk-litellm-test-master-key' } }
             );
             spendData = await spendResponse.json();
             console.log(`spendData (attempt ${attempt + 1}):`, spendData);
@@ -73,7 +73,7 @@ describe('Gemini AI Tests', () => {
     }, 90000);
 
     test('should successfully generate streaming content with tags', async () => {
-        const genAI = new GoogleGenerativeAI("sk-1234"); // litellm proxy API key
+        const genAI = new GoogleGenerativeAI("sk-litellm-test-master-key"); // litellm proxy API key
 
         const requestOptions = {
             baseUrl: 'http://127.0.0.1:4000/gemini',
@@ -110,7 +110,7 @@ describe('Gemini AI Tests', () => {
             await new Promise(resolve => setTimeout(resolve, 10000));
             const spendResponse = await fetch(
                 `http://127.0.0.1:4000/spend/logs?request_id=${callId}`,
-                { headers: { 'Authorization': 'Bearer sk-1234' } }
+                { headers: { 'Authorization': 'Bearer sk-litellm-test-master-key' } }
             );
             spendData = await spendResponse.json();
             console.log(`spendData (attempt ${attempt + 1}):`, spendData);

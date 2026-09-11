@@ -126,7 +126,7 @@ def prisma_client():
 
 async def setup_db_connection(prisma_client):
     setattr(litellm.proxy.proxy_server, "prisma_client", prisma_client)
-    setattr(litellm.proxy.proxy_server, "master_key", "sk-1234")
+    setattr(litellm.proxy.proxy_server, "master_key", "sk-litellm-test-master-key")
     await litellm.proxy.proxy_server.prisma_client.connect()
 
 

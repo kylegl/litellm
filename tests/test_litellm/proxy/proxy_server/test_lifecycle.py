@@ -24,7 +24,7 @@ import logging
 import os
 import subprocess
 from collections.abc import Awaitable, Callable
-from typing import List, Optional, Union
+from typing import Final, List, Optional, Union
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
@@ -33,6 +33,7 @@ from pydantic import BaseModel
 from typing_extensions import TypedDict
 
 import litellm.proxy.proxy_server as ps
+from litellm.proxy.auth.master_key_policy import INSECURE_MASTER_KEYS
 from litellm.proxy.proxy_server import (
     ProxyStartupEvent,
     _initialize_shared_aiohttp_session,
@@ -879,26 +880,28 @@ def test_proxy_startup_event_warns_for_global_budget_without_database():
 
 
 async def test_proxy_startup_event_refuses_docs_example_master_key(monkeypatch):
-    monkeypatch.setenv("LITELLM_MASTER_KEY", "sk-1234")
-    monkeypatch.delenv("LITELLM_ALLOW_INSECURE_MASTER_KEY", raising=False)
+    example_key: Final[str] = next(iter(INSECURE_MASTER_KEYS))
+    monkeypatch.setenv("LITELLM_MASTER_KEY", example_key)
 
-    with pytest.raises(ValueError, match="example key 'sk-1234'"):
+    with pytest.raises(ValueError, match=f"example key '{example_key}'"):
         async with proxy_startup_event(app=None):
             pass
 
 
-async def test_proxy_startup_event_allows_docs_example_master_key_with_escape_hatch(monkeypatch):
-    monkeypatch.setenv("LITELLM_MASTER_KEY", "sk-1234")
-    monkeypatch.setenv("LITELLM_ALLOW_INSECURE_MASTER_KEY", "true")
+@pytest.mark.asyncio
+async def test_proxy_startup_event_refuses_docs_example_master_key_from_config_file(monkeypatch, tmp_path):
+    example_key: Final[str] = next(iter(INSECURE_MASTER_KEYS))
+    config_path: Final = tmp_path / "config.yaml"
+    config_path.write_text(
+        f"model_list: []\ngeneral_settings:\n  master_key: {example_key}\n",
+        encoding="utf-8",
+    )
+    monkeypatch.delenv("LITELLM_MASTER_KEY", raising=False)
+    monkeypatch.setenv("CONFIG_FILE_PATH", str(config_path))
 
-    try:
+    with pytest.raises(ValueError, match=f"example key '{example_key}'"):
         async with proxy_startup_event(app=None):
             pass
-    except ValueError as e:
-        if "example key 'sk-1234'" in str(e):
-            pytest.fail("startup refused sk-1234 despite LITELLM_ALLOW_INSECURE_MASTER_KEY=true")
-    except Exception:
-        pass
 
 
 @pytest.mark.asyncio

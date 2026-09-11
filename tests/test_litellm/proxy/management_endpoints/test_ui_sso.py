@@ -8320,7 +8320,7 @@ async def _render_legacy_login_page(env_overrides, general_settings):
     with (
         # snapshot os.environ so the mutations below are reverted on exit
         patch.dict(os.environ, {}, clear=False),
-        patch("litellm.proxy.proxy_server.master_key", "sk-1234"),
+        patch("litellm.proxy.proxy_server.master_key", "sk-litellm-test-master-key"),
         patch("litellm.proxy.proxy_server.prisma_client", MagicMock()),
         patch("litellm.proxy.proxy_server.premium_user", False),
         patch("litellm.proxy.proxy_server.general_settings", general_settings),
@@ -8436,7 +8436,7 @@ async def test_saml_callback_enforces_free_sso_user_limit_after_validation():
     with patch.dict(os.environ, {"DISABLE_ADMIN_UI": "false"}), patch(
         "litellm.proxy.proxy_server.premium_user", False
     ), patch("litellm.proxy.proxy_server.prisma_client", MagicMock()), patch(
-        "litellm.proxy.proxy_server.master_key", "sk-1234"
+        "litellm.proxy.proxy_server.master_key", "sk-litellm-test-master-key"
     ), patch(
         "litellm.proxy.management_endpoints.sso.saml_sso.SAMLAuthHandler.handle_acs",
         new=_fake_handle_acs,

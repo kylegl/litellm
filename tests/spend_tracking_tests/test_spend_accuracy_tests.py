@@ -67,7 +67,7 @@ def _make_test_session() -> aiohttp.ClientSession:
 async def create_organization(session, organization_alias: str):
     """Helper function to create a new organization"""
     url = "http://0.0.0.0:4000/organization/new"
-    headers = {"Authorization": "Bearer sk-1234", "Content-Type": "application/json"}
+    headers = {"Authorization": "Bearer sk-litellm-test-master-key", "Content-Type": "application/json"}
     data = {"organization_alias": organization_alias}
     async with session.post(url, headers=headers, json=data) as response:
         return await response.json()
@@ -76,7 +76,7 @@ async def create_organization(session, organization_alias: str):
 async def create_team(session, org_id: str):
     """Helper function to create a new team under an organization"""
     url = "http://0.0.0.0:4000/team/new"
-    headers = {"Authorization": "Bearer sk-1234", "Content-Type": "application/json"}
+    headers = {"Authorization": "Bearer sk-litellm-test-master-key", "Content-Type": "application/json"}
     data = {"organization_id": org_id, "team_alias": f"test-team-{uuid.uuid4()}"}
     async with session.post(url, headers=headers, json=data) as response:
         return await response.json()
@@ -85,7 +85,7 @@ async def create_team(session, org_id: str):
 async def create_user(session, org_id: str):
     """Helper function to create a new user"""
     url = "http://0.0.0.0:4000/user/new"
-    headers = {"Authorization": "Bearer sk-1234", "Content-Type": "application/json"}
+    headers = {"Authorization": "Bearer sk-litellm-test-master-key", "Content-Type": "application/json"}
     data = {"user_name": f"test-user-{uuid.uuid4()}"}
     async with session.post(url, headers=headers, json=data) as response:
         return await response.json()
@@ -94,7 +94,7 @@ async def create_user(session, org_id: str):
 async def generate_key(session, user_id: str, team_id: str):
     """Helper function to generate a key for a specific user and team"""
     url = "http://0.0.0.0:4000/key/generate"
-    headers = {"Authorization": "Bearer sk-1234", "Content-Type": "application/json"}
+    headers = {"Authorization": "Bearer sk-litellm-test-master-key", "Content-Type": "application/json"}
     data = {"user_id": user_id, "team_id": team_id}
     async with session.post(url, headers=headers, json=data) as response:
         return await response.json()
@@ -117,7 +117,7 @@ async def chat_completion(session, key: str):
 async def get_spend_info(session, entity_type: str, entity_id: str):
     """Helper function to get spend information for an entity"""
     url = f"http://0.0.0.0:4000/{entity_type}/info"
-    headers = {"Authorization": "Bearer sk-1234", "Content-Type": "application/json"}
+    headers = {"Authorization": "Bearer sk-litellm-test-master-key", "Content-Type": "application/json"}
     if entity_type == "key":
         data = {"key": entity_id}
     else:
@@ -130,7 +130,7 @@ async def get_spend_info(session, entity_type: str, entity_id: str):
 async def get_proxy_readiness(session):
     """Fetch authenticated readiness details. Used both as a fail-fast gate and as a diagnostic on poll timeout."""
     url = "http://0.0.0.0:4000/health/readiness/details"
-    headers = {"Authorization": "Bearer sk-1234"}
+    headers = {"Authorization": "Bearer sk-litellm-test-master-key"}
     async with session.get(url, headers=headers) as response:
         return response.status, await response.json()
 

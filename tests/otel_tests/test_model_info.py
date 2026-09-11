@@ -11,7 +11,7 @@ async def test_custom_model_supports_vision():
     async with httpx.AsyncClient() as client:
         response = await client.get(
             "http://localhost:4000/model/info",
-            headers={"Authorization": "Bearer sk-1234"},
+            headers={"Authorization": "Bearer sk-litellm-test-master-key"},
         )
         assert response.status_code == 200
 

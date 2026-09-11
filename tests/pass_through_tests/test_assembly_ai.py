@@ -9,7 +9,7 @@ import httpx
 import aiohttp
 import asyncio
 
-TEST_MASTER_KEY = "sk-1234"
+TEST_MASTER_KEY = "sk-litellm-test-master-key"
 TEST_BASE_URL = "http://0.0.0.0:4000/assemblyai"
 
 

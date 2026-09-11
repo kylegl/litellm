@@ -4,7 +4,7 @@ from fastapi.testclient import TestClient
 from litellm.proxy.proxy_server import app, ProxyLogging, hash_token
 from litellm.caching import DualCache
 
-MASTER_KEY = "sk-1234"
+MASTER_KEY = "sk-litellm-test-master-key"
 
 
 @pytest.fixture(autouse=True)

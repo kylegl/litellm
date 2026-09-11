@@ -58,7 +58,7 @@ class TestPlaceholders:
             ("file-XyZ12345abc", "<id>"),
             ("gpt-4o-mini", "gpt-4o-mini"),
             ("max_tokens", "max_tokens"),
-            ("sk-1234", "sk-1234"),
+            ("sk-litellm-test-master-key", "sk-litellm-test-master-key"),
         ],
     )
     def test_rewrites_exactly_the_volatile_shapes(self, raw: str, expected: str) -> None:

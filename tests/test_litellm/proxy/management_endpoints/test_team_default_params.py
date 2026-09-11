@@ -657,7 +657,7 @@ class TestBulkUpdateTeamMemberPermissions:
 
         return UserAPIKeyAuth(
             user_role=LitellmUserRoles.PROXY_ADMIN.value,
-            api_key="sk-1234",
+            api_key="sk-litellm-test-master-key",
         )
 
     def _non_admin_key_dict(self):

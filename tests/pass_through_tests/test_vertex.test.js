@@ -75,7 +75,7 @@ describe('Vertex AI Tests', () => {
             });
 
             const customHeaders = new Headers({
-                "x-litellm-api-key": "sk-1234"
+                "x-litellm-api-key": "sk-litellm-test-master-key"
             });
 
             const requestOptions = {
@@ -121,7 +121,7 @@ describe('Vertex AI Tests', () => {
                 location: 'global',
                 apiEndpoint: "localhost:4000/vertex-ai"
             });
-            const customHeaders = new Headers({"x-litellm-api-key": "sk-1234"});
+            const customHeaders = new Headers({"x-litellm-api-key": "sk-litellm-test-master-key"});
             const requestOptions = {customHeaders: customHeaders};
             const generativeModel = vertexAI.getGenerativeModel(
                 {model: 'gemini-3.1-flash-lite'},

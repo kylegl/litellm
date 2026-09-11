@@ -274,7 +274,7 @@ def test_the_search_matches_model_group_names_case_insensitively(monkeypatch):
 @pytest.fixture
 def guarded(monkeypatch):
     """A proxy with a master key set, so anything but a public route would demand credentials."""
-    monkeypatch.setattr("litellm.proxy.proxy_server.master_key", "sk-1234")
+    monkeypatch.setattr("litellm.proxy.proxy_server.master_key", "sk-litellm-test-master-key")
     monkeypatch.setattr("litellm.proxy.proxy_server.general_settings", {})
 
 

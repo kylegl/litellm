@@ -12,7 +12,7 @@ async def generate_key(
     session,
     i,
     models: list,
-    calling_key="sk-1234",
+    calling_key="sk-litellm-test-master-key",
 ):
     url = "http://0.0.0.0:4000/key/generate"
     headers = {
@@ -88,7 +88,7 @@ async def test_chat_completion():
             {"role": "user", "content": "Who was Alexander?"},
         ]
         await chat_completion(
-            session=session, key="sk-1234", model=model, messages=messages
+            session=session, key="sk-litellm-test-master-key", model=model, messages=messages
         )
 
 
@@ -145,7 +145,7 @@ async def test_chat_completion_with_retries():
         ]
         response, headers = await chat_completion(
             session=session,
-            key="sk-1234",
+            key="sk-litellm-test-master-key",
             model=model,
             messages=messages,
             mock_testing_rate_limit_error=True,
@@ -169,7 +169,7 @@ async def test_chat_completion_with_fallbacks():
         ]
         response, headers = await chat_completion(
             session=session,
-            key="sk-1234",
+            key="sk-litellm-test-master-key",
             model=model,
             messages=messages,
             fallbacks=["fake-openai-endpoint-5"],
@@ -193,7 +193,7 @@ async def test_chat_completion_with_timeout():
         start_time = time.time()
         response, headers = await chat_completion(
             session=session,
-            key="sk-1234",
+            key="sk-litellm-test-master-key",
             model=model,
             messages=messages,
             num_retries=0,
@@ -224,7 +224,7 @@ async def test_chat_completion_with_timeout_from_request():
         start_time = time.time()
         response, headers = await chat_completion(
             session=session,
-            key="sk-1234",
+            key="sk-litellm-test-master-key",
             model=model,
             messages=messages,
             num_retries=0,
@@ -316,7 +316,7 @@ async def test_chat_completion_bad_and_good_model():
     """
     Prod test - ensure even if bad model is down, good model is still working.
     """
-    client = AsyncOpenAI(api_key="sk-1234", base_url="http://0.0.0.0:4000")
+    client = AsyncOpenAI(api_key="sk-litellm-test-master-key", base_url="http://0.0.0.0:4000")
     num_requests = 100
     num_iterations = 3
 

@@ -13,7 +13,7 @@ from prisma import Json
 
 from litellm.proxy.utils import hash_token
 
-MASTER_KEY = "sk-1234"
+MASTER_KEY = "sk-litellm-test-master-key"
 SCRATCH_PREFIX = "scratch-"
 
 
@@ -50,7 +50,6 @@ async def proxy_app():
     # ambient LITELLM_MASTER_KEY with a different value would make the proxy
     # authenticate on that key while the tests still send MASTER_KEY.
     os.environ["LITELLM_MASTER_KEY"] = MASTER_KEY
-    os.environ["LITELLM_ALLOW_INSECURE_MASTER_KEY"] = "true"
     os.environ["CONFIG_FILE_PATH"] = config_path
 
     await initialize(config=config_path)
