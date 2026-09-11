@@ -1472,10 +1472,10 @@ async def test_get_new_token_rejects_short_new_key(monkeypatch):
 
 
 @pytest.mark.asyncio
-@pytest.mark.parametrize("short_key", ["sk-litellm-test-master-key", "sk-abcdefghijkl"])
+@pytest.mark.parametrize("short_key", ["sk-short", "sk-abcdefghijkl"])
 async def test_generate_key_fn_rejects_short_custom_key(monkeypatch, short_key):
     """Regression test for LIT-4355: /key/generate must reject custom keys shorter
-    than the minimum length (including the 15-char boundary); sk-litellm-test-master-key used to be
+    than the minimum length (including the 15-char boundary); sk-short used to be
     accepted and fully exposed via key_name."""
     mock_prisma_client = AsyncMock()
     mock_prisma_client.db = MagicMock()

@@ -996,8 +996,8 @@ def test_abbreviate_api_key():
 
 def test_abbreviate_api_key_short_key_is_fully_masked():
     """Regression test for LIT-4355: for keys shorter than the enforced minimum,
-    showing the last 4 characters can reveal the entire key (sk-litellm-test-master-key -> sk-...1234)."""
-    assert abbreviate_api_key("sk-litellm-test-master-key") == "sk-..."
+    showing the last 4 characters can reveal the entire key (sk-short -> sk-...hort)."""
+    assert abbreviate_api_key("sk-short") == "sk-..."
     assert abbreviate_api_key("sk-test-1234") == "sk-..."
     assert abbreviate_api_key("") == "sk-..."
 

@@ -50,10 +50,10 @@ class TestMask:
     def test_short_value_masked(self):
         # Short auth values must not be echoed verbatim in debug headers, even though
         # visible_prefix + visible_suffix would otherwise reveal the whole value.
-        masked = MCPDebug._mask("sk-litellm-test-master-key")
-        assert "sk-litellm-test-master-key" not in masked
+        masked = MCPDebug._mask("sk-short")
+        assert "sk-short" not in masked
         assert set(masked) == {"*"}
-        assert len(masked) == len("sk-litellm-test-master-key")
+        assert len(masked) == len("sk-short")
 
     def test_long_value_masked(self):
         result = MCPDebug._mask("Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9")
