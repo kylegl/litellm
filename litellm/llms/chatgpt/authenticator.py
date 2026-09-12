@@ -1,6 +1,8 @@
 import base64
 import json
 import os
+import tempfile
+import threading
 import time
 from collections.abc import Mapping
 from typing import Final, TypeAlias
@@ -34,6 +36,7 @@ OPENAI_AUTH_CLAIM_KEY: Final = "https://api.openai.com/auth"
 JsonObject: TypeAlias = Mapping[str, JsonValue]
 
 _JSON_OBJECT_ADAPTER: Final = TypeAdapter(JsonObject)
+_AUTH_LOCK: Final = threading.Lock()
 
 
 def _optional_str(value: JsonValue | None) -> str | None:
@@ -53,6 +56,10 @@ class Authenticator:
         return os.getenv("CHATGPT_API_BASE") or os.getenv("OPENAI_CHATGPT_API_BASE") or CHATGPT_API_BASE
 
     def get_access_token(self) -> str:
+        with _AUTH_LOCK:
+            return self._get_access_token()
+
+    def _get_access_token(self) -> str:
         auth_data: Final = self._read_auth_file()
         if auth_data:
             access_token: Final = _optional_str(auth_data.get("access_token"))
@@ -63,8 +70,14 @@ class Authenticator:
                 try:
                     refreshed: Final = self._refresh_tokens(refresh_token)
                     return refreshed["access_token"]
-                except RefreshAccessTokenError as exc:
-                    verbose_logger.warning("ChatGPT refresh token failed, re-login required: %s", exc)
+                except RefreshAccessTokenError:
+                    verbose_logger.warning("ChatGPT refresh token failed, re-login required")
+
+        if os.getenv("CHATGPT_NONINTERACTIVE", "").lower() in ("true", "1"):
+            raise GetAccessTokenError(
+                message="ChatGPT credentials unavailable. Complete a separate device login before serving requests.",
+                status_code=401,
+            )
 
         cooldown_remaining: Final = self._get_device_code_cooldown_remaining(auth_data)
         if cooldown_remaining > 0:
@@ -99,16 +112,27 @@ class Authenticator:
                 return _JSON_OBJECT_ADAPTER.validate_python(json.load(f))
         except OSError:
             return None
-        except (json.JSONDecodeError, ValidationError) as exc:
-            verbose_logger.warning("Invalid ChatGPT auth file: %s", exc)
+        except (json.JSONDecodeError, ValidationError):
+            verbose_logger.warning("Invalid ChatGPT auth file")
             return None
 
     def _write_auth_file(self, data: JsonObject) -> None:
         try:
-            with open(self.auth_file, "w") as f:
-                json.dump(data, f)
-        except OSError as exc:
-            verbose_logger.error("Failed to write ChatGPT auth file: %s", exc)
+            parent: Final = os.path.dirname(self.auth_file)
+            with tempfile.TemporaryDirectory(prefix=".chatgpt-auth-", dir=parent) as directory:
+                with tempfile.NamedTemporaryFile(mode="w", encoding="utf-8", dir=directory, delete=False) as f:
+                    json.dump(data, f)
+                    f.flush()
+                    os.fsync(f.fileno())
+                os.replace(f.name, self.auth_file)
+            if os.name == "posix":
+                directory_fd: Final = os.open(parent, os.O_RDONLY)
+                try:
+                    os.fsync(directory_fd)
+                finally:
+                    os.close(directory_fd)
+        except OSError:
+            raise GetAccessTokenError(message="Could not persist ChatGPT credentials", status_code=500) from None
 
     def _is_token_expired(self, auth_data: JsonObject, access_token: str) -> bool:
         stored_expires_at: Final = auth_data.get("expires_at")
@@ -186,18 +210,18 @@ class Authenticator:
                 message=f"Failed to request device code: {exc}",
                 status_code=exc.response.status_code,
             )
-        except Exception as exc:
+        except Exception:
             raise GetDeviceCodeError(
-                message=f"Failed to request device code: {exc}",
+                message="Failed to request device code",
                 status_code=400,
-            )
+            ) from None
 
         device_auth_id: Final = _optional_str(data.get("device_auth_id"))
         user_code: Final = _optional_str(data.get("user_code") or data.get("usercode"))
         interval: Final = data.get("interval")
         if not device_auth_id or not user_code:
             raise GetDeviceCodeError(
-                message=f"Device code response missing fields: {data}",
+                message="Device code response missing required fields",
                 status_code=400,
             )
         return {
@@ -243,11 +267,11 @@ class Authenticator:
                     message=f"Polling failed: {exc}",
                     status_code=exc.response.status_code,
                 )
-            except Exception as exc:
+            except Exception:
                 raise GetAccessTokenError(
-                    message=f"Polling failed: {exc}",
+                    message="Polling failed",
                     status_code=400,
-                )
+                ) from None
             time.sleep(max(interval, DEVICE_CODE_POLL_SLEEP_SECONDS))
 
         raise GetAccessTokenError(
@@ -278,18 +302,18 @@ class Authenticator:
                 message=f"Token exchange failed: {exc}",
                 status_code=exc.response.status_code,
             )
-        except Exception as exc:
+        except Exception:
             raise GetAccessTokenError(
-                message=f"Token exchange failed: {exc}",
+                message="Token exchange failed",
                 status_code=400,
-            )
+            ) from None
 
         access_token: Final = _optional_str(data.get("access_token"))
         refresh_token: Final = _optional_str(data.get("refresh_token"))
         id_token: Final = _optional_str(data.get("id_token"))
         if not access_token or not refresh_token or not id_token:
             raise GetAccessTokenError(
-                message=f"Token exchange response missing fields: {data}",
+                message="Token exchange response missing required fields",
                 status_code=400,
             )
         return {
@@ -317,17 +341,17 @@ class Authenticator:
                 message=f"Refresh token failed: {exc}",
                 status_code=exc.response.status_code,
             )
-        except Exception as exc:
+        except Exception:
             raise RefreshAccessTokenError(
-                message=f"Refresh token failed: {exc}",
+                message="Refresh token failed",
                 status_code=400,
-            )
+            ) from None
 
         access_token: Final = _optional_str(data.get("access_token"))
         id_token: Final = _optional_str(data.get("id_token"))
         if not access_token or not id_token:
             raise RefreshAccessTokenError(
-                message=f"Refresh response missing fields: {data}",
+                message="Refresh response missing required fields",
                 status_code=400,
             )
 
